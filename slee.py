@@ -1,4 +1,4 @@
-import requests, json, urllib.request, os
+import requests, json, urllib.request, os, socket
 from bs4 import BeautifulSoup
 
 num_cards = '100'
@@ -28,12 +28,22 @@ with open("cards.json", "w") as file:
         src = tr.find("th").find("img")['src']
         if str(src).endswith(".jpg"):
             filename = str(card["[Number]"]).replace("/", "-")+".jpg"
-            try:
-                if not os.path.isfile("cardfaces/"+filename):
-                    urllib.request.urlretrieve("http://cf-vanguard.com/en/cardlist/"+str(src), "cardfaces/"+filename)
-                card["[Image]"] = filename
-            except urllib.error.HTTPError:
-                pass
+            attempts = 3
+            while not os.path.isfile("cardfaces/"+filename):
+                try:
+                    with open("cardfaces/"+filename, "wb") as img:
+                        img.write(urllib.request.urlopen("http://cf-vanguard.com/en/cardlist/"+str(src), None, 10).read())
+                    card["[Image]"] = filename
+                except socket.timeout:
+                    attempts -= 1
+                    print("timeout (10s): http://cf-vanguard.com/en/cardlist/"+str(src),)
+                    if attempts > 0:
+                        print("retrying...")
+                    else:
+                        break
+                except (urllib.error.HTTPError, urllib.error.URLError):
+                    print("error downloading: http://cf-vanguard.com/en/cardlist/"+str(src))
+                    break
 
         cards.append(card)
         print(str(len(cards))+" / "+str(len(trs)))
