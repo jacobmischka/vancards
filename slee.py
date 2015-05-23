@@ -36,7 +36,7 @@ with open("cards.json", "w") as file:
                     card["[Image]"] = filename
                 except socket.timeout:
                     attempts -= 1
-                    print("timeout (10s): http://cf-vanguard.com/en/cardlist/"+str(src),)
+                    print("timeout (10s): http://cf-vanguard.com/en/cardlist/"+str(src))
                     if attempts > 0:
                         print("retrying...")
                     else:
