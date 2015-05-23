@@ -27,9 +27,12 @@ with open("cards.json", "w") as file:
         src = tr.find("th").find("img")['src']
         if str(src).endswith(".jpg"):
             filename = str(card["[Number]"]).replace("/", "-")+".jpg"
-            if not os.path.isfile("cardfaces/"+filename):
-                urllib.request.urlretrieve("http://cf-vanguard.com/en/cardlist/"+str(src), "cardfaces/"+filename)
-            card["[Image]"] = filename
+            try:
+                if not os.path.isfile("cardfaces/"+filename):
+                    urllib.request.urlretrieve("http://cf-vanguard.com/en/cardlist/"+str(src), "cardfaces/"+filename)
+                card["[Image]"] = filename
+            except urllib.error.HTTPError:
+                pass
 
         cards.append(card)
     json.dump(cards, file)
