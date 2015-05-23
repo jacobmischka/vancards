@@ -31,8 +31,9 @@ with open("cards.json", "w") as file:
             attempts = 3
             while not os.path.isfile("cardfaces/"+filename):
                 try:
+                    data = urllib.request.urlopen("http://cf-vanguard.com/en/cardlist/"+str(src), None, 10).read()
                     with open("cardfaces/"+filename, "wb") as img:
-                        img.write(urllib.request.urlopen("http://cf-vanguard.com/en/cardlist/"+str(src), None, 10).read())
+                        img.write(data)
                     card["[Image]"] = filename
                 except socket.timeout:
                     attempts -= 1
