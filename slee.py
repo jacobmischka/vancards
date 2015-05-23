@@ -1,7 +1,7 @@
 import requests, json, urllib.request, os, socket
 from bs4 import BeautifulSoup
 
-num_cards = '100'
+num_cards = '10000'
 r = requests.post('http://cf-vanguard.com/en/cardlist/cardsearch', data={'data[CardSearch][show_page_count]':num_cards, 'data[CardSearch][keyword]':'', 'cmd':'search'})
 r.encoding = 'utf-8'
 soup = BeautifulSoup(r.text)
