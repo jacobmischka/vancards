@@ -1,9 +1,11 @@
-import requests, json, urllib.request
+import requests, json, urllib.request, os
 from bs4 import BeautifulSoup
 
-r = requests.post('http://cf-vanguard.com/en/cardlist/cardsearch', data={'data[CardSearch][show_page_count]':'10', 'data[CardSearch][keyword]':'', 'cmd':'search'})
+num_cards = '100'
+r = requests.post('http://cf-vanguard.com/en/cardlist/cardsearch', data={'data[CardSearch][show_page_count]':num_cards, 'data[CardSearch][keyword]':'', 'cmd':'search'})
 r.encoding = 'utf-8'
 soup = BeautifulSoup(r.text)
+os.makedirs("cardfaces", exist_ok=True)
 with open("cards.json", "w") as file:
     cards = []
     for tr in soup.find(id="searchResult-table").find_all("tr"):
@@ -23,9 +25,9 @@ with open("cards.json", "w") as file:
                     card["[Text]"] = span.string
 
         src = tr.find("th").find("img")['src']
-        if str(src).endswith(".jpg") or str(src).endswith(".png"):
+        if str(src).endswith(".jpg"):
             filename = str(card["[Number]"]).replace("/", "-")+".jpg"
-            urllib.request.urlretrieve("http://cf-vanguard.com/en/cardlist/"+str(src), filename)
+            urllib.request.urlretrieve("http://cf-vanguard.com/en/cardlist/"+str(src), "cardfaces/"+filename)
             card["[Image]"] = filename
 
         cards.append(card)
