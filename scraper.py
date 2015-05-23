@@ -5,6 +5,7 @@ r = requests.post('http://cf-vanguard.com/en/cardlist/cardsearch', data={'data[C
 r.encoding = 'utf-8'
 soup = BeautifulSoup(r.text)
 with open("cards.json", "w") as file:
+    cards = []
     for tr in soup.find(id="searchResult-table").find_all("tr"):
         card = {}
         td = tr.find("td")
@@ -27,4 +28,5 @@ with open("cards.json", "w") as file:
             urllib.request.urlretrieve("http://cf-vanguard.com/en/cardlist/"+str(src), filename)
             card["[Image]"] = filename
 
-        json.dump(card, file)
+        cards.append(card)
+    json.dump(cards, file)
