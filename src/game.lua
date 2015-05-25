@@ -4,7 +4,7 @@ local zone = require("zone")
 local game = {}
 
 function game:new()
-    o = o or {}
+    o = {}
     setmetatable(o, self)
     self.__index = self
 

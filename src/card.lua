@@ -1,7 +1,7 @@
 local card = {}
 
 function card:new()
-    o = o or {}
+    o = {}
     setmetatable(o, self)
     self.__index = self
 
