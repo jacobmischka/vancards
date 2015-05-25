@@ -1,4 +1,3 @@
-local card = require("card")
 local zone = {}
 
 function zone:new()
@@ -17,11 +16,11 @@ function zone:new()
     return o
 end
 
-function zone:init()
-    self.x = 300
-    self.y = 100
-    self.width = 200
-    self.height = 400
+function zone:init(x, y, width, height)
+    self.x = x
+    self.y = y
+    self.width = width
+    self.height = height
 
     self.capacity = 1
 end

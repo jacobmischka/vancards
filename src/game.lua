@@ -23,11 +23,15 @@ function game:new()
     return o
 end
 
-function game:enter()
+function game:init()
     self.card = card:new()
     self.card:init(100, 100)
     self.zone = zone:new()
-    self.zone:init()
+    self.zone:init(400, 200, 150, 400)
+end
+
+function game:enter()
+
 end
 
 function game:update(dt)

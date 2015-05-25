@@ -15,7 +15,9 @@ end
 
 function card:init(x, y)
     self.x = x
+    self.dragging.x0 = x
     self.y = y
+    self.dragging.y0 = y
 end
 
 return card
