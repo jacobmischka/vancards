@@ -25,4 +25,8 @@ function zone:init(x, y, width, height)
     self.capacity = 1
 end
 
+function zone:inside(x, y)
+    return x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height
+end
+
 return zone
