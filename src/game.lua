@@ -39,54 +39,54 @@ function game:enter()
 end
 
 function game:update(dt)
-    if self.card and self.card.dragging.active then
-        self.card.x = love.mouse.getX() - self.card.dragging.dx
-        self.card.y = love.mouse.getY() - self.card.dragging.dy
-    end
+	if self.card and self.card.dragging.active then
+		self.card.x = love.mouse.getX() - self.card.dragging.dx
+		self.card.y = love.mouse.getY() - self.card.dragging.dy
+	end
 end
 
 function game:draw()
-    for i,zone in pairs(self.zones) do
-        zone:draw()
-    end
+	for i,zone in pairs(self.zones) do
+		zone:draw()
+	end
 end
 
 function game:mousepressed(x, y, button)
-    if button == "l" then
-        self.card = nil
-        for i,zone in pairs(self.zones) do
-            if zone:contains(x, y) then
-                for j,card in ipairs(zone.cards) do
-                    if card:contains(x, y) then self.card = card end
-                end
-            end
-        end
-        if self.card then
-            self.card.dragging.active = true
-            self.card.dragging.dx = x - self.card.x
-            self.card.dragging.dy = y - self.card.y
-            self.card.dragging.x0 = self.card.x
-            self.card.dragging.y0 = self.card.y
-        end
-    end
+	if button == "l" then
+		self.card = nil
+		for i,zone in pairs(self.zones) do
+			if zone:contains(x, y) then
+				for j,card in ipairs(zone.cards) do
+					if card:contains(x, y) then self.card = card end
+				end
+			end
+		end
+		if self.card then
+			self.card.dragging.active = true
+			self.card.dragging.dx = x - self.card.x
+			self.card.dragging.dy = y - self.card.y
+			self.card.dragging.x0 = self.card.x
+			self.card.dragging.y0 = self.card.y
+		end
+	end
 end
 
 function game:mousereleased(x, y, button)
-    if button == "l" and self.card then
-        for k,zone in pairs(self.zones) do
-            if zone:contains(self.card.x, self.card.y) then
-                zone:addCard(self.card)
-                self.card = nil
-                break
-            end
-        end
-        if self.card then
-            self.card.x = self.card.dragging.x0
-            self.card.y = self.card.dragging.y0
-            self.card.dragging.active = false
-        end
-        self.card = nil
-    end
+	if button == "l" and self.card then
+		for k,zone in pairs(self.zones) do
+			if zone:contains(self.card.x, self.card.y) then
+				zone:addCard(self.card)
+				self.card = nil
+				break
+			end
+		end
+		if self.card then
+			self.card.x = self.card.dragging.x0
+			self.card.y = self.card.dragging.y0
+			self.card.dragging.active = false
+		end
+		self.card = nil
+	end
 end
 
 return game
