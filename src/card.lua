@@ -1,15 +1,28 @@
 local card = {}
 
-function card:new(id, face)
+function card:new(json)
     o = {}
     setmetatable(o, self)
     self.__index = self
 
     o.x = 0
     o.y = 0
-    face = face or "G-BT01-088EN PR.jpg"
-    o.face = love.graphics.newImage("cardfaces/"..face)
-    o.id = id
+
+    json["[Image]"] = json["[Image]"] or "G-BT01-088EN PR.jpg"
+    o.face = love.graphics.newImage("cardfaces/"..json["[Image]"])
+    o.id = json["[Number]"]
+    o.critical = json["[Critical]"]
+    o.grade = json["[Grade]"]
+    o.trigger = json["[Trigger]"]
+    o.race = json["[Race]"]
+    o.clan = json["[Clan]"]
+    o.rarity = json["[Rarity]"]
+    o.unit = json["[Unit]"]
+    o.power = json["[Power]"]
+    o.expansion = json["[Expansion]"]
+    o.shield = json["[Shield]"]
+    o.text = json["[Text]"]
+
     o.dragging = { active = false, dx = 0, dy = 0, x0 = 0, y0 = 0}
     o.zone = nil
 
@@ -29,7 +42,7 @@ function card:contains(x, y)
 end
 
 function card:draw()
-    if self.face then love.graphics.draw(self.face, self.x, self.y, 0, 1, 1, self.face:getWidth()/2, self.face:getHeight()/2) end
+    if self.face then love.graphics.draw(self.face, self.x, self.y, 2*math.pi, 1, 1, self.face:getWidth()/2, self.face:getHeight()/2) end
 end
 
 return card

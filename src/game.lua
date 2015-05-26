@@ -19,7 +19,7 @@ function game:init()
     self.zones.drop = zone:new()
     self.zones.drop:init(400, 200, 150, 200)
     self.zones.hand = zone:new()
-    self.zones.hand:init(0, 800, 1000, 200, 7)
+    self.zones.hand:init(0, 500, 720, 200, 7)
     self.zones.deck = zone:new()
     self.zones.deck:init(100, 100, 150, 200, 50)
 
@@ -30,7 +30,7 @@ function game:init()
     table.foreach(cards, print)
 
     for i=1,50 do
-        self.zones.deck:addCard(card:new(cards[i]["[Number]"], cards[i]["[Image]"]))
+        self.zones.deck:addCard(card:new(cards[i]))
     end
 end
 
