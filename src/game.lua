@@ -68,7 +68,7 @@ function game:draw()
 	love.graphics.draw(self.playmat.rearguard, 1075, 18) -- P1 back right
 	love.graphics.draw(self.playmat.rearguard, 663, 224) -- P1 front left
 	love.graphics.draw(self.playmat.rearguard, 1075, 224) -- P1 front right
-	love.graphics.draw(self.playmat.vanguard, 841, 196, math.pi, 1, 1, 119, 119) -- P1 vanguard
+	love.graphics.draw(self.playmat.vanguard, 841, 196) -- P1 vanguard
 
 	-- Scale render target to screen
 	love.graphics.setCanvas()
