@@ -18,21 +18,51 @@ function game:init()
 
 	self.card = nil
 	self.zones = {
-		vanguard = nil,
-		rearguard = nil,
-		deck = nil,
-		drop = nil,
-		trigger = nil,
-		damage = nil,
-		gunit = nil,
-		hand = nil
+		p1 = {
+			vanguard = nil,
+			rearFrontLeft = nil,
+			rearFrontRight = nil,
+			rearBackLeft = nil,
+			rearBackCenter = nil,
+			rearBackRight = nil,
+			deck = nil,
+			drop = nil,
+			trigger = nil,
+			damage = nil,
+			gunit = nil,
+			hand = nil
+		},
+		p2 = {
+			vanguard = nil,
+			rearFrontLeft = nil,
+			rearFrontRight = nil,
+			rearBackLeft = nil,
+			rearBackCenter = nil,
+			rearBackRight = nil,
+			deck = nil,
+			drop = nil,
+			trigger = nil,
+			damage = nil,
+			gunit = nil,
+			hand = nil
+		},
 	}
-	self.zones.drop = zone:new()
-	self.zones.drop:init(400, 200, 150, 200)
-	self.zones.hand = zone:new()
-	self.zones.hand:init(0, 500, 720, 200, 7)
-	self.zones.deck = zone:new()
-	self.zones.deck:init(100, 100, 150, 200, 50)
+
+	self.zones.p1.vanguard = zone:new()
+	self.zones.p1.vanguard:init(841, 646, 238, 238, false)
+	self.zones.p1.rearBackLeft = zone:new()
+	self.zones.p1.rearBackLeft:init(663, 880, 182, 182, false)
+	self.zones.p1.rearBackCenter = zone:new()
+	self.zones.p1.rearBackCenter:init(869, 880, 182, 182, false)
+	self.zones.p1.rearBackRight = zone:new()
+	self.zones.p1.rearBackRight:init(1075, 880, 182, 182, false)
+	self.zones.p1.rearFrontLeft = zone:new()
+	self.zones.p1.rearFrontLeft:init(663, 674, 182, 182, false)
+	self.zones.p1.rearFrontRight = zone:new()
+	self.zones.p1.rearFrontRight:init(1075, 674, 182, 182, false)
+
+	self.zones.p1.deck = zone:new()
+	self.zones.p1.deck:init(100, 100, 150, 200, true, 50)
 
 	local f = assert(io.open("cards.json", "r"))
 	local t = f:read("*all")
@@ -41,7 +71,7 @@ function game:init()
 	table.foreach(cards, print)
 
 	for i=1,50 do
-		self.zones.deck:addCard(card:new(cards[i]))
+		self.zones.p1.deck:addCard(card:new(cards[i]))
 	end
 end
 
@@ -76,15 +106,15 @@ function game:draw()
 	love.graphics.draw(self.playmat.vanguard, 841, 646) -- P1 vanguard
 
 	-- P2 rearguard & vanguard
-	love.graphics.draw(self.playmat.rearguard, 663, 18) -- P1 back left
-	love.graphics.draw(self.playmat.rearguard, 869, 18) -- P1 back center
-	love.graphics.draw(self.playmat.rearguard, 1075, 18) -- P1 back right
-	love.graphics.draw(self.playmat.rearguard, 663, 224) -- P1 front left
-	love.graphics.draw(self.playmat.rearguard, 1075, 224) -- P1 front right
-	love.graphics.draw(self.playmat.vanguard, 841, 196) -- P1 vanguard
+	love.graphics.draw(self.playmat.rearguard, 663, 18) -- P2 back left
+	love.graphics.draw(self.playmat.rearguard, 869, 18) -- P2 back center
+	love.graphics.draw(self.playmat.rearguard, 1075, 18) -- P2 back right
+	love.graphics.draw(self.playmat.rearguard, 663, 224) -- P2 front left
+	love.graphics.draw(self.playmat.rearguard, 1075, 224) -- P2 front right
+	love.graphics.draw(self.playmat.vanguard, 841, 196) -- P2 vanguard
 
 	-- Render cards here
-	for i,zone in pairs(self.zones) do
+	for i,zone in pairs(self.zones.p1) do
 		zone:draw()
 	end
 
@@ -96,7 +126,7 @@ end
 function game:mousepressed(x, y, button)
 	if button == "l" then
 		self.card = nil
-		for i,zone in pairs(self.zones) do
+		for i,zone in pairs(self.zones.p1) do
 			if zone:contains(x, y) then
 				for j,card in ipairs(zone.cards) do
 					if card:contains(x, y) then self.card = card end
@@ -115,7 +145,7 @@ end
 
 function game:mousereleased(x, y, button)
 	if button == "l" and self.card then
-		for k,zone in pairs(self.zones) do
+		for k,zone in pairs(self.zones.p1) do
 			if zone:contains(self.card.x, self.card.y) then
 				zone:addCard(self.card)
 				self.card = nil

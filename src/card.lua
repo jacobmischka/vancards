@@ -49,7 +49,7 @@ end
 
 function card:draw()
 	love.graphics.draw(self.sleeve.bottom, self.x, self.y, 0, 1, 1, 70, 99)
-	if self.face then love.graphics.draw(self.face, self.x, self.y, 2*math.pi, 1, 1, math.floor(self.face:getWidth()/2), math.floor(self.face:getHeight()/2)) end
+	if self.face then love.graphics.draw(self.face, self.x, self.y, 0, 1, 1, math.floor(self.face:getWidth()/2), math.floor(self.face:getHeight()/2)) end
 	love.graphics.draw(self.sleeve.border, self.x, self.y, 0, 1, 1, 70, 99)
 	love.graphics.draw(self.sleeve.top, self.x, self.y, 0, 1, 1, 70, 99)
 end

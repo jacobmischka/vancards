@@ -10,19 +10,21 @@ function zone:new()
     o.width = 0
     o.height = 0
 
+    o.border = false
     o.capacity = 0
     o.cards = nil
 
     return o
 end
 
-function zone:init(x, y, width, height, capacity)
+function zone:init(x, y, width, height, border, capacity)
     self.x = x
     self.y = y
     self.width = width
     self.height = height
     self.cards = {}
 
+    self.border = border or false
     self.capacity = capacity or 1
 end
 
@@ -31,7 +33,7 @@ function zone:contains(x, y)
 end
 
 function zone:draw()
-    love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+    if self.border then love.graphics.rectangle("line", self.x, self.y, self.width, self.height) end
     for i,card in ipairs(self.cards) do
         card:draw()
     end
