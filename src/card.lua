@@ -29,6 +29,8 @@ function card:new(json)
 	o.shield = json["[Shield]"]
 	o.text = json["[Text]"]
 
+    o.orientation = "up"
+
 	o.dragging = { active = false, dx = 0, dy = 0, x0 = 0, y0 = 0}
 	o.zone = nil
 
@@ -48,10 +50,20 @@ function card:contains(x, y)
 end
 
 function card:draw()
-	love.graphics.draw(self.sleeve.bottom, self.x, self.y, 0, 1, 1, 70, 99)
-	if self.face then love.graphics.draw(self.face, self.x, self.y, 0, 1, 1, math.floor(self.face:getWidth()/2), math.floor(self.face:getHeight()/2)) end
-	love.graphics.draw(self.sleeve.border, self.x, self.y, 0, 1, 1, 70, 99)
-	love.graphics.draw(self.sleeve.top, self.x, self.y, 0, 1, 1, 70, 99)
+    if self.orientation == "up" then
+    	love.graphics.draw(self.sleeve.bottom, self.x, self.y, 0, 1, 1, 70, 99)
+    	if self.face then love.graphics.draw(self.face, self.x, self.y, 0, 1, 1, math.floor(self.face:getWidth()/2), math.floor(self.face:getHeight()/2)) end
+    	love.graphics.draw(self.sleeve.border, self.x, self.y, 0, 1, 1, 70, 99)
+    	love.graphics.draw(self.sleeve.top, self.x, self.y, 0, 1, 1, 70, 99)
+    elseif self.orientation == "down" then
+        love.graphics.draw(self.sleeve.bottom, self.x, self.y, 0, 1, 1, 70, 99)
+    end
+end
+
+function card:flip(orientation)
+    if orientation then self.orientation = orientation
+    elseif self.orientation == "up" then self.orientation = "down"
+    else self.orientation = "up" end
 end
 
 return card

@@ -47,6 +47,7 @@ function zone:addCard(card)
         table.insert(self.cards, card)
         if card.zone then card.zone:removeCard(card) end
         card.zone = self
+        card:flip("up")
     else
         card.x = card.dragging.x0
         card.y = card.dragging.y0

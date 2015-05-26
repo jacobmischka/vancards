@@ -63,6 +63,10 @@ function game:init()
 
 	self.zones.p1.deck = zone:new()
 	self.zones.p1.deck:init(100, 100, 150, 200, true, 50)
+    self.zones.p1.deck.addCard = function(self, card)
+        self.__index.addCard(self, card)
+        card:flip("down")
+    end
 
 	local f = assert(io.open("cards.json", "r"))
 	local t = f:read("*all")
