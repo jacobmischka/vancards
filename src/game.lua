@@ -5,33 +5,44 @@ local json = require("lib.dkjson")
 local game = {}
 
 function game:init()
-    self.card = nil
-    self.zones = {
-        vanguard = nil,
-        rearguard = nil,
-        deck = nil,
-        drop = nil,
-        trigger = nil,
-        damage = nil,
-        gunit = nil,
-        hand = nil
-    }
-    self.zones.drop = zone:new()
-    self.zones.drop:init(400, 200, 150, 200)
-    self.zones.hand = zone:new()
-    self.zones.hand:init(0, 500, 720, 200, 7)
-    self.zones.deck = zone:new()
-    self.zones.deck:init(100, 100, 150, 200, 50)
+	self.canvas = love.graphics.newCanvas(1920, 1080)
 
-    local f = assert(io.open("cards.json", "r"))
-    local t = f:read("*all")
-    f:close()
-    local cards, pos, err = json.decode(t, 1, nil)
-    table.foreach(cards, print)
+	self.bg = love.graphics.newImage("res/table_bg.png")
+	self.playmat = {
+		bg = love.graphics.newImage("res/playmat_bg.png"),
+		shadow = love.graphics.newImage("res/playmat_shadow.png"),
+		vanguard = love.graphics.newImage("res/playmat_vanguard.png"),
+		rearguard = love.graphics.newImage("res/playmat_rearguard.png"),
+		guardian = love.graphics.newImage("res/playmat_guardian.png")
+	}
 
-    for i=1,50 do
-        self.zones.deck:addCard(card:new(cards[i]))
-    end
+	self.card = nil
+	self.zones = {
+		vanguard = nil,
+		rearguard = nil,
+		deck = nil,
+		drop = nil,
+		trigger = nil,
+		damage = nil,
+		gunit = nil,
+		hand = nil
+	}
+	self.zones.drop = zone:new()
+	self.zones.drop:init(400, 200, 150, 200)
+	self.zones.hand = zone:new()
+	self.zones.hand:init(0, 500, 720, 200, 7)
+	self.zones.deck = zone:new()
+	self.zones.deck:init(100, 100, 150, 200, 50)
+
+	local f = assert(io.open("cards.json", "r"))
+	local t = f:read("*all")
+	f:close()
+	local cards, pos, err = json.decode(t, 1, nil)
+	table.foreach(cards, print)
+
+	for i=1,50 do
+		self.zones.deck:addCard(card:new(cards[i]))
+	end
 end
 
 function game:enter()
@@ -40,15 +51,46 @@ end
 
 function game:update(dt)
 	if self.card and self.card.dragging.active then
-		self.card.x = love.mouse.getX() - self.card.dragging.dx
-		self.card.y = love.mouse.getY() - self.card.dragging.dy
+		self.card.x = mouseX() - self.card.dragging.dx
+		self.card.y = mouseY() - self.card.dragging.dy
 	end
 end
 
 function game:draw()
+	love.graphics.setCanvas(self.canvas)
+	self.canvas:clear()
+
+	-- Draw playmat & table
+	love.graphics.draw(self.bg, 0, 0)
+	love.graphics.draw(self.playmat.bg, 417, 0)
+	love.graphics.draw(self.playmat.bg, 417, 540)
+	love.graphics.draw(self.playmat.shadow, 405, 0)
+	love.graphics.draw(self.playmat.guardian, 750, 433)
+
+	-- P1 rearguard & vanguard
+	love.graphics.draw(self.playmat.rearguard, 663, 880) -- P1 back left
+	love.graphics.draw(self.playmat.rearguard, 869, 880) -- P1 back center
+	love.graphics.draw(self.playmat.rearguard, 1075, 880) -- P1 back right
+	love.graphics.draw(self.playmat.rearguard, 663, 674) -- P1 front left
+	love.graphics.draw(self.playmat.rearguard, 1075, 674) -- P1 front right
+	love.graphics.draw(self.playmat.vanguard, 841, 646) -- P1 vanguard
+
+	-- P2 rearguard & vanguard
+	love.graphics.draw(self.playmat.rearguard, 663, 18) -- P1 back left
+	love.graphics.draw(self.playmat.rearguard, 869, 18) -- P1 back center
+	love.graphics.draw(self.playmat.rearguard, 1075, 18) -- P1 back right
+	love.graphics.draw(self.playmat.rearguard, 663, 224) -- P1 front left
+	love.graphics.draw(self.playmat.rearguard, 1075, 224) -- P1 front right
+	love.graphics.draw(self.playmat.vanguard, 841, 196) -- P1 vanguard
+
+	-- Render cards here
 	for i,zone in pairs(self.zones) do
 		zone:draw()
 	end
+
+	-- Scale render target to screen
+	love.graphics.setCanvas()
+	love.graphics.draw(self.canvas, love.graphics.newQuad(0, 0, 1920, 1080, love.graphics.getWidth(), love.graphics.getHeight()))
 end
 
 function game:mousepressed(x, y, button)
@@ -87,6 +129,14 @@ function game:mousereleased(x, y, button)
 		end
 		self.card = nil
 	end
+end
+
+function mouseX()
+	return (love.mouse.getX() / love.graphics.getWidth()) * 1920
+end
+
+function mouseY()
+	return (love.mouse.getY() / love.graphics.getHeight()) * 1080
 end
 
 return game
