@@ -68,7 +68,6 @@ function game:init()
 	local t = f:read("*all")
 	f:close()
 	local cards, pos, err = json.decode(t, 1, nil)
-	table.foreach(cards, print)
 
 	for i=1,50 do
 		self.zones.p1.deck:addCard(card:new(cards[i]))
@@ -106,17 +105,18 @@ function game:draw()
 	love.graphics.draw(self.playmat.vanguard, 841, 646) -- P1 vanguard
 
 	-- P2 rearguard & vanguard
-	love.graphics.draw(self.playmat.rearguard, 663, 18) -- P2 back left
-	love.graphics.draw(self.playmat.rearguard, 869, 18) -- P2 back center
-	love.graphics.draw(self.playmat.rearguard, 1075, 18) -- P2 back right
-	love.graphics.draw(self.playmat.rearguard, 663, 224) -- P2 front left
-	love.graphics.draw(self.playmat.rearguard, 1075, 224) -- P2 front right
-	love.graphics.draw(self.playmat.vanguard, 841, 196) -- P2 vanguard
+	love.graphics.draw(self.playmat.rearguard, 663, 18) -- P1 back left
+	love.graphics.draw(self.playmat.rearguard, 869, 18) -- P1 back center
+	love.graphics.draw(self.playmat.rearguard, 1075, 18) -- P1 back right
+	love.graphics.draw(self.playmat.rearguard, 663, 224) -- P1 front left
+	love.graphics.draw(self.playmat.rearguard, 1075, 224) -- P1 front right
+	love.graphics.draw(self.playmat.vanguard, 841+self.playmat.vanguard:getWidth(), 196+self.playmat.vanguard:getHeight(), math.pi, 1, 1) -- P1 vanguard
 
 	-- Render cards here
 	for i,zone in pairs(self.zones.p1) do
 		zone:draw()
 	end
+    if self.card then self.card:draw() end
 
 	-- Scale render target to screen
 	love.graphics.setCanvas()
@@ -124,6 +124,8 @@ function game:draw()
 end
 
 function game:mousepressed(x, y, button)
+    x = (x/love.graphics.getWidth())*1920
+    y = (y/love.graphics.getHeight())*1080
 	if button == "l" then
 		self.card = nil
 		for i,zone in pairs(self.zones.p1) do
@@ -144,6 +146,8 @@ function game:mousepressed(x, y, button)
 end
 
 function game:mousereleased(x, y, button)
+    x = (x/love.graphics.getWidth())*1920
+    y = (y/love.graphics.getHeight())*1080
 	if button == "l" and self.card then
 		for k,zone in pairs(self.zones.p1) do
 			if zone:contains(self.card.x, self.card.y) then
