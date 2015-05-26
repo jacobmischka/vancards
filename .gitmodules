@@ -1,3 +1,0 @@
-[submodule "lib/hump"]
-	path = src/lib/hump
-	url = https://github.com/vrld/hump.git
