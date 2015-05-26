@@ -1,10 +1,10 @@
 local card = require("card")
 local zone = require("zone")
+local json = require("lib.dkjson")
 
 local game = {}
 
 function game:init()
-    self.cards = {}
     self.card = nil
     self.zones = {
         vanguard = nil,
@@ -22,8 +22,15 @@ function game:init()
     self.zones.hand:init(0, 800, 1000, 200, 7)
     self.zones.deck = zone:new()
     self.zones.deck:init(100, 100, 150, 200, 50)
+
+    local f = assert(io.open("cards.json", "r"))
+    local t = f:read("*all")
+    f:close()
+    local cards, pos, err = json.decode(t, 1, nil)
+    table.foreach(cards, print)
+
     for i=1,50 do
-        self.zones.deck:addCard(card:new(i))
+        self.zones.deck:addCard(card:new(cards[i]["[Number]"], cards[i]["[Image]"]))
     end
 end
 
