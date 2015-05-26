@@ -1,3 +1,6 @@
 [submodule "src/lib/hump"]
 	path = src/lib/hump
 	url = https://github.com/vrld/hump.git
+[submodule "src/lib/LoveFrames"]
+	path = src/lib/LoveFrames
+	url = https://github.com/KennyShields/LoveFrames.git

@@ -1,3 +1,6 @@
+local gamestate = require("lib.hump.gamestate")
+local cardmenu = require("cardmenu")
+
 local card = require("card")
 local zone = require("zone")
 local json = require("lib.dkjson")
@@ -127,18 +130,24 @@ function game:draw()
 	love.graphics.draw(self.canvas, love.graphics.newQuad(0, 0, 1920, 1080, love.graphics.getWidth(), love.graphics.getHeight()))
 end
 
+function game:clickedCard(x, y)
+    local returncard
+    for i,zone in pairs(self.zones.p1) do
+        if zone:contains(x, y) then
+            for j,card in ipairs(zone.cards) do
+                if card:contains(x, y) then returncard = card end
+            end
+        end
+    end
+    return returncard
+end
+
 function game:mousepressed(x, y, button)
     x = (x/love.graphics.getWidth())*1920
     y = (y/love.graphics.getHeight())*1080
 	if button == "l" then
 		self.card = nil
-		for i,zone in pairs(self.zones.p1) do
-			if zone:contains(x, y) then
-				for j,card in ipairs(zone.cards) do
-					if card:contains(x, y) then self.card = card end
-				end
-			end
-		end
+		self.card = self:clickedCard(x, y)
 		if self.card then
 			self.card.dragging.active = true
 			self.card.dragging.dx = x - self.card.x
@@ -146,6 +155,11 @@ function game:mousepressed(x, y, button)
 			self.card.dragging.x0 = self.card.x
 			self.card.dragging.y0 = self.card.y
 		end
+    elseif button == "r" then
+        local card = self:clickedCard(x, y)
+        if card and card.orientation == "up" then
+            gamestate.push(cardmenu, card)
+        end
 	end
 end
 
