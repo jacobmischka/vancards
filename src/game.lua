@@ -1,5 +1,6 @@
 local card = require("card")
 local zone = require("zone")
+local json = require("lib.dkjson")
 
 local game = {}
 

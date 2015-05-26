@@ -1,13 +1,14 @@
 local card = {}
 
-function card:new(id)
+function card:new(id, face)
     o = {}
     setmetatable(o, self)
     self.__index = self
 
     o.x = 0
     o.y = 0
-    o.face = love.graphics.newImage("cardfaces/G-BT01-088EN PR.jpg")
+    face = face or "G-BT01-088EN PR.jpg"
+    o.face = love.graphics.newImage("cardfaces/"..face)
     o.id = id
     o.dragging = { active = false, dx = 0, dy = 0, x0 = 0, y0 = 0}
     o.zone = nil
@@ -28,7 +29,7 @@ function card:contains(x, y)
 end
 
 function card:draw()
-    love.graphics.draw(self.face, self.x, self.y, 0, 1, 1, self.face:getWidth()/2, self.face:getHeight()/2)
+    if self.face then love.graphics.draw(self.face, self.x, self.y, 0, 1, 1, self.face:getWidth()/2, self.face:getHeight()/2) end
 end
 
 return card
