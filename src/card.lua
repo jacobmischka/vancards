@@ -17,6 +17,7 @@ function card:new(json)
 	json["[Image]"] = json["[Image]"] or "G-BT01-088EN PR.jpg"
 	o.face = love.graphics.newImage("cardfaces/"..json["[Image]"])
 	o.id = json["[Number]"]
+    o.name = json["[Name]"]
 	o.critical = json["[Critical]"]
 	o.grade = json["[Grade]"]
 	o.trigger = json["[Trigger]"]
