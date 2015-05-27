@@ -15,8 +15,8 @@ function cardmenu:init()
 	self.exitButton.OnClick = function(object, x, y)
 		gamestate.pop()
 	end
-	self.name = loveframes.Create("text", self.frame)
-	self.name:SetText(""):SetY(30, true)
+	-- self.name = loveframes.Create("text", self.frame)
+	-- self.name:SetText(""):SetY(30, true)
 
 	local numbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
 
@@ -39,7 +39,7 @@ end
 function cardmenu:enter(game, card)
 	self.game = game
 	self.card = card
-	self.name:SetText(self.card.name):CenterX()
+	self.frame:SetName(self.card.name)
 	self.power:SetText(self.card.power)
 	self.shield:SetText(self.card.shield)
 	loveframes.SetState("cardmenu")

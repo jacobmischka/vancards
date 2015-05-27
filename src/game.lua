@@ -177,25 +177,39 @@ function game:mousepressed(x, y, button)
 end
 
 function game:mousereleased(x, y, button)
-    x = (x/love.graphics.getWidth())*1920
-    y = (y/love.graphics.getHeight())*1080
+	loveframes.mousereleased(x, y, button)
+    -- x = (x/love.graphics.getWidth())*1920
+    -- y = (y/love.graphics.getHeight())*1080
 	if button == "l" and self.card then
-		for k,zone in pairs(self.zones.p1) do
-			if zone:contains(self.card.x, self.card.y) then
-				zone:addCard(self.card)
-				self.card = nil
-				break
+		if self.card.x == self.card.dragging.x0 and self.card.y == self.card.dragging.y0 then
+			if self.cardcontext then
+				self.cardcontext:Remove()
+				self.cardcontext = nil
+			else
+				self.cardcontext = loveframes.Create("menu")
+				local card = self.card
+				self.cardcontext:AddOption("Flip", false, function()
+					card:flip()
+				end)
+				self.cardcontext:SetPos(x, y)
 			end
-		end
-		if self.card then
-			self.card.x = self.card.dragging.x0
-			self.card.y = self.card.dragging.y0
-			self.card.dragging.active = false
+		else
+			for k,zone in pairs(self.zones.p1) do
+				if zone:contains(self.card.x, self.card.y) then
+					zone:addCard(self.card)
+					self.card = nil
+					break
+				end
+			end
+			if self.card then
+				self.card.x = self.card.dragging.x0
+				self.card.y = self.card.dragging.y0
+				self.card.dragging.active = false
+			end
 		end
 		self.card = nil
 	end
 
-    loveframes.mousereleased(x, y, button)
 end
 
 function mouseX()
