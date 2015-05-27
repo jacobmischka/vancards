@@ -82,6 +82,39 @@ function game:init()
 	for i=1,50 do
 		self.zones.p1.deck:addCard(card:new(cards[i]))
 	end
+
+    self.frame = loveframes.Create("frame")
+	self.frame:SetPos(canvasX(10), canvasY(350)):ShowCloseButton(false):SetSize(canvasX(400), canvasY(700))
+
+	self.list = loveframes.Create("list", self.frame)
+	self.list:SetPos(canvasX(5), canvasY(40)):SetSize(canvasX(390), canvasY(650))
+
+	-- self.name = loveframes.Create("text", self.frame)
+	-- self.name:SetText(""):SetY(30, true)
+
+	local numbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
+
+    self.image = loveframes.Create("image")
+    self.image:SetImage("res/sleeve_back.png")
+    self.list:AddItem(self.image)
+
+	self.powerForm = loveframes.Create("form")
+	self.powerForm:SetLayoutType("horizontal"):SetName("Power")
+	self.power = loveframes.Create("text")
+    self.power:SetText("0")
+	self.powerForm:AddItem(self.power)
+	self.list:AddItem(self.powerForm)
+
+	self.shieldForm = loveframes.Create("form")
+	self.shieldForm:SetLayoutType("horizontal"):SetName("Shield")
+	self.shield = loveframes.Create("text")
+    self.shield:SetText("0")
+	self.shieldForm:AddItem(self.shield)
+	self.list:AddItem(self.shieldForm)
+
+    self.text = loveframes.Create("text")
+    self.list:AddItem(self.text)
+
 end
 
 function game:enter()
@@ -153,26 +186,32 @@ function game:clickedCard(x, y)
     return returncard
 end
 
+function game:updateCardmenu(card)
+    self.frame:SetName(self.card.name)
+    self.image:SetImage(self.card.face)
+	self.power:SetText(self.card.power)
+	self.shield:SetText(self.card.shield)
+    self.text:SetText(self.card.text)
+end
+
 function game:mousepressed(x, y, button)
 	loveframes.mousepressed(x, y, button)
 	x = (x/love.graphics.getWidth())*1920
     y = (y/love.graphics.getHeight())*1080
+    self.card = nil
+    self.card = self:clickedCard(x, y)
 	if button == "l" then
-		self.card = nil
-		self.card = self:clickedCard(x, y)
 		if self.card then
+            if self.card and self.card.orientation == "up" then
+                self:updateCardmenu(self.card)
+            end
 			self.card.dragging.active = true
 			self.card.dragging.dx = x - self.card.x
 			self.card.dragging.dy = y - self.card.y
 			self.card.dragging.x0 = self.card.x
 			self.card.dragging.y0 = self.card.y
 		end
-    elseif button == "r" then
-        local card = self:clickedCard(x, y)
-        if card and card.orientation == "up" then
-            gamestate.push(cardmenu, card)
-        end
-	end
+    end
 
 end
 
@@ -181,34 +220,30 @@ function game:mousereleased(x, y, button)
     -- x = (x/love.graphics.getWidth())*1920
     -- y = (y/love.graphics.getHeight())*1080
 	if button == "l" and self.card then
-		if self.card.x == self.card.dragging.x0 and self.card.y == self.card.dragging.y0 then
-			if self.cardcontext then
-				self.cardcontext:Remove()
-				self.cardcontext = nil
-			else
-				self.cardcontext = loveframes.Create("menu")
-				local card = self.card
-				self.cardcontext:AddOption("Flip", false, function() card:flip() end)
-				self.cardcontext:AddOption("Rotate", false, function() card:rotate() end)
-				self.cardcontext:SetPos(x, y)
-			end
-		else
-			for k,zone in pairs(self.zones.p1) do
-				if zone:contains(self.card.x, self.card.y) then
-					zone:addCard(self.card)
-					self.card = nil
-					break
-				end
-			end
-			if self.card then
-				self.card.x = self.card.dragging.x0
-				self.card.y = self.card.dragging.y0
-				self.card.dragging.active = false
+		for k,zone in pairs(self.zones.p1) do
+			if zone:contains(self.card.x, self.card.y) then
+				zone:addCard(self.card)
+				self.card = nil
+				break
 			end
 		end
-		self.card = nil
-	end
-
+		if self.card then
+			self.card.x = self.card.dragging.x0
+			self.card.y = self.card.dragging.y0
+			self.card.dragging.active = false
+		end
+	elseif button == "r" and self.card then
+        local card = self.card
+        if self.cardcontext then
+            self.cardcontext:Remove()
+            self.cardcontext = nil
+        end
+        self.cardcontext = loveframes.Create("menu")
+        self.cardcontext:AddOption("Rotate", false, function() card:rotate() end)
+        self.cardcontext:AddOption("Flip", false, function() card:flip() end)
+        self.cardcontext:SetPos(x, y)
+    end
+    self.card = nil
 end
 
 function mouseX()
@@ -217,6 +252,14 @@ end
 
 function mouseY()
 	return (love.mouse.getY() / love.graphics.getHeight()) * 1080
+end
+
+function canvasX(x)
+    return (x/1920) * love.graphics.getWidth()
+end
+
+function canvasY(y)
+    return(y/1080) * love.graphics.getHeight()
 end
 
 function game:keypressed(key, code)
