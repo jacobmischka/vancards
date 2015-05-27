@@ -5,6 +5,7 @@ local cardmenu = {}
 function cardmenu:init()
 	self.frame = loveframes.Create("frame")
 	self.frame:ShowCloseButton(false):SetSize(400, 500)
+	self.frame:SetState("cardmenu")
 
 	self.list = loveframes.Create("list", self.frame)
 	self.list:SetPos(50, 50):SetSize(300, 350)
@@ -41,6 +42,7 @@ function cardmenu:enter(game, card)
 	self.name:SetText(self.card.name):CenterX()
 	self.power:SetText(self.card.power)
 	self.shield:SetText(self.card.shield)
+	loveframes.SetState("cardmenu")
 end
 
 function cardmenu:leave()

@@ -1,9 +1,12 @@
 local gamestate = require("lib.hump.gamestate")
+local loveframes = require("lib.LoveFrames")
 local cardmenu = require("cardmenu")
 
 local card = require("card")
 local zone = require("zone")
 local json = require("lib.dkjson")
+
+love.graphics.setNewFont(24)
 
 local game = {}
 
@@ -85,11 +88,17 @@ function game:enter()
 
 end
 
+function game:resume()
+    loveframes.SetState("none")
+end
+
 function game:update(dt)
 	if self.card and self.card.dragging.active then
 		self.card.x = mouseX() - self.card.dragging.dx
 		self.card.y = mouseY() - self.card.dragging.dy
 	end
+
+    loveframes.update(dt)
 end
 
 function game:draw()
@@ -128,6 +137,8 @@ function game:draw()
 	-- Scale render target to screen
 	love.graphics.setCanvas()
 	love.graphics.draw(self.canvas, love.graphics.newQuad(0, 0, 1920, 1080, love.graphics.getWidth(), love.graphics.getHeight()))
+
+    loveframes.draw()
 end
 
 function game:clickedCard(x, y)
@@ -161,6 +172,8 @@ function game:mousepressed(x, y, button)
             gamestate.push(cardmenu, card)
         end
 	end
+
+    loveframes.mousepressed(x, y, button)
 end
 
 function game:mousereleased(x, y, button)
@@ -181,6 +194,8 @@ function game:mousereleased(x, y, button)
 		end
 		self.card = nil
 	end
+
+    loveframes.mousereleased(x, y, button)
 end
 
 function mouseX()
@@ -189,6 +204,18 @@ end
 
 function mouseY()
 	return (love.mouse.getY() / love.graphics.getHeight()) * 1080
+end
+
+function game:keypressed(key, code)
+    loveframes.keypressed(key, code)
+end
+
+function game:keyreleased(key)
+    loveframes.keyreleased(key)
+end
+
+function game:textinput(text)
+    loveframes.textinput(text)
 end
 
 return game
