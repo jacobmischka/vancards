@@ -154,7 +154,8 @@ function game:clickedCard(x, y)
 end
 
 function game:mousepressed(x, y, button)
-    x = (x/love.graphics.getWidth())*1920
+	loveframes.mousepressed(x, y, button)
+	x = (x/love.graphics.getWidth())*1920
     y = (y/love.graphics.getHeight())*1080
 	if button == "l" then
 		self.card = nil
@@ -173,7 +174,6 @@ function game:mousepressed(x, y, button)
         end
 	end
 
-    loveframes.mousepressed(x, y, button)
 end
 
 function game:mousereleased(x, y, button)
@@ -188,9 +188,8 @@ function game:mousereleased(x, y, button)
 			else
 				self.cardcontext = loveframes.Create("menu")
 				local card = self.card
-				self.cardcontext:AddOption("Flip", false, function()
-					card:flip()
-				end)
+				self.cardcontext:AddOption("Flip", false, function() card:flip() end)
+				self.cardcontext:AddOption("Rotate", false, function() card:rotate() end)
 				self.cardcontext:SetPos(x, y)
 			end
 		else
