@@ -30,7 +30,7 @@ with open("cards.json", "w") as file:
                         card["[Skill]"] = src[src.find("sk_")+3:src.rfind(".")]
                     elif "[Trigger]" in span.text:
                         src = span.find("img")["src"]
-                        card["Trigger"] = src[src.find("tr_")+3:src.rfind(".")]
+                        card["[Trigger]"] = src[src.find("tr_")+3:src.rfind(".")]
 
             elif span.string:
                 if "[Race]" in span.string or "[Clan]" in span.string:
