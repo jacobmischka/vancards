@@ -101,7 +101,7 @@ function game:init()
 	end)
 
 	self.zones.p1.gunit = zone:new()
-	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "up", "forward", 8, "none", function(i, card, zone)
+	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "up", "forward", 8, "flip", function(i, card, zone)
 		card.x = zone.x + math.floor((CARD_WIDTH / 2) + (PADDING * 2) + ((i - 1) * ((ZONE_HEIGHT - CARD_WIDTH - (PADDING * 2)) / 8.5)))
 		card.y = zone.y + (CARD_LENGTH / 2) + (PADDING * 2)
 	end)
