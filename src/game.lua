@@ -6,21 +6,21 @@ local card = require("card")
 local zone = require("zone")
 local json = require("lib.dkjson")
 
-local CARD_WIDTH = 126
-local CARD_LENGTH = 182
-local PADDING = 6
-local CIRCLE_WIDTH = CARD_LENGTH + (PADDING * 2)
-local GUARD_WIDTH = (CIRCLE_WIDTH * 2) + (PADDING * 2)
-local GUARD_HEIGHT = CARD_WIDTH + (PADDING * 2)
-local ZONE_HEIGHT = CARD_LENGTH + (PADDING * 4)
-local MAT_WIDTH = (CIRCLE_WIDTH * 3) + (ZONE_HEIGHT * 2) + (PADDING * 14)
-local DAMAGE_HEIGHT = ZONE_HEIGHT * 2 + PADDING
-local CANVAS_WIDTH = 1920
-local CANVAS_HEIGHT = 1200
-local FRAME_WIDTH = (CANVAS_WIDTH - MAT_WIDTH) / 2
-local CENTER_X = CANVAS_WIDTH / 2
-local CENTER_Y = CANVAS_HEIGHT / 2
-local HAND_OFFSET = 60
+CARD_WIDTH = 126
+CARD_LENGTH = 182
+PADDING = 6
+CIRCLE_WIDTH = CARD_LENGTH + (PADDING * 2)
+GUARD_WIDTH = (CIRCLE_WIDTH * 2) + (PADDING * 2)
+GUARD_HEIGHT = CARD_WIDTH + (PADDING * 2)
+ZONE_HEIGHT = CARD_LENGTH + (PADDING * 4)
+MAT_WIDTH = (CIRCLE_WIDTH * 3) + (ZONE_HEIGHT * 2) + (PADDING * 14)
+DAMAGE_HEIGHT = ZONE_HEIGHT * 2 + PADDING
+CANVAS_WIDTH = 1920
+CANVAS_HEIGHT = 1200
+FRAME_WIDTH = (CANVAS_WIDTH - MAT_WIDTH) / 2
+CENTER_X = CANVAS_WIDTH / 2
+CENTER_Y = CANVAS_HEIGHT / 2
+HAND_OFFSET = 60
 
 local game = {}
 
@@ -98,7 +98,10 @@ function game:init()
 	self.zones.p1.drop:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 3) - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "up", "forward", 60)
 
 	self.zones.p1.damage = zone:new()
-	self.zones.p1.damage:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 3) - DAMAGE_HEIGHT, ZONE_HEIGHT, DAMAGE_HEIGHT, "up", "sideward", 6)
+	self.zones.p1.damage:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 3) - DAMAGE_HEIGHT, ZONE_HEIGHT, DAMAGE_HEIGHT, "up", "sideward", 6, function(i, card, zone)
+		card.x = zone.x + (CARD_LENGTH / 2) + (PADDING * 2)
+		card.y = zone.y + (CARD_WIDTH / 2) + (PADDING * 2) - 1 + ((i - 1) * ((DAMAGE_HEIGHT - CARD_WIDTH - (PADDING * 4)) / 5))
+	end)
 
 	self.zones.p1.gunit = zone:new()
 	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "down", "forward", 8)

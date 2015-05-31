@@ -54,7 +54,7 @@ end
 function zone:position()
     for i, card in ipairs(self.cards) do
         if self.positioner then
-            self.positioner(i, card, zone)
+            self.positioner(i, card, self)
         else
             card.x = self.x + self.width/2
             card.y = self.y + self.height/2
@@ -64,13 +64,13 @@ end
 
 function zone:addCard(card)
     if(#self.cards < self.capacity) then
-        self:position()
         card.dragging.active = false
         table.insert(self.cards, card)
         if card.zone then card.zone:removeCard(card) end
         card.zone = self
         card:flip(self.face)
         card:rotate(self.orientation)
+        self:position()
     else
         card.x = card.dragging.x0
         card.y = card.dragging.y0
