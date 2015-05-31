@@ -311,7 +311,14 @@ function game:draw()
 	for i,zone in pairs(self.zones.p1) do
 		zone:draw()
 	end
-	if self.card then self.card:draw() end
+	if self.card and (self.card.x ~= self.card.dragging.x0 or self.card.y ~= self.card.dragging.y0) then
+        self.card:draw()
+    else
+        local hoverCard = self:clickedCard(mouseX(), mouseY())
+        if hoverCard and hoverCard.zone == self.zones.p1.hand then
+            hoverCard:draw()
+        end
+    end
 
 	-- Scale render target to screen
 	love.graphics.setCanvas()
