@@ -84,6 +84,7 @@ function zone:removeCard(removedCard)
             table.remove(self.cards, i)
         end
     end
+    self:position()
 end
 
 return zone
