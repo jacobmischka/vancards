@@ -26,8 +26,10 @@ function card:new(json)
 	o.rarity = json["[Rarity]"]
 	o.unit = json["[Unit]"]
 	o.power = json["[Power]"]
+    o.basepower = json["[Power]"]
 	o.expansion = json["[Expansion]"]
 	o.shield = json["[Shield]"]
+    o.baseshield = json["[Shield]"]
 	o.text = json["[Text]"]
 
     o.orientation = "up"

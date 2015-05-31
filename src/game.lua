@@ -106,16 +106,32 @@ function game:init()
 
 	self.powerForm = loveframes.Create("form")
 	self.powerForm:SetLayoutType("horizontal"):SetName("Power")
-	self.power = loveframes.Create("text")
-	self.power:SetText("0")
-	self.powerForm:AddItem(self.power)
+	self.power = loveframes.Create("textinput")
+    self.power:SetEditable(true):SetMultiline(false):SetUsable(numbers)
+    self.power:SetText("0"):SetWidth(canvasX(200))
+    self.power.OnEnter = function(object, text)
+        if self.menucard then
+            self.menucard.power = text
+        end
+    end
+    self.basepower = loveframes.Create("text")
+    self.basepower:SetDefaultColor(100,0,0,255):SetText("0")
+	self.powerForm:AddItem(self.power):AddItem(self.basepower)
 	self.list:AddItem(self.powerForm)
 
 	self.shieldForm = loveframes.Create("form")
 	self.shieldForm:SetLayoutType("horizontal"):SetName("Shield")
-	self.shield = loveframes.Create("text")
-	self.shield:SetText("0")
-	self.shieldForm:AddItem(self.shield)
+	self.shield = loveframes.Create("textinput")
+    self.shield:SetEditable(true):SetMultiline(false):SetUsable(numbers)
+    self.shield:SetText("0"):SetWidth(canvasX(200))
+    self.shield.OnEnter = function(object, text)
+        if self.menucard then
+            self.menucard.shield = text
+        end
+    end
+    self.baseshield = loveframes.Create("text")
+    self.baseshield:SetDefaultColor(100,0,0,255):SetText("0")
+    self.shieldForm:AddItem(self.shield):AddItem(self.baseshield)
 	self.list:AddItem(self.shieldForm)
 
 	self.text = loveframes.Create("text")
@@ -193,11 +209,14 @@ function game:clickedCard(x, y)
 end
 
 function game:updateCardmenu(card)
-	self.frame:SetName(self.card.name)
-	self.image:SetImage(self.card.face)
+    self.menucard = card
+    self.frame:SetName(self.card.name)
+    self.image:SetImage(self.card.face)
 	self.power:SetText(self.card.power)
+    self.basepower:SetText(self.card.basepower)
 	self.shield:SetText(self.card.shield)
-	self.text:SetText(self.card.text)
+    self.baseshield:SetText(self.card.baseshield)
+    self.text:SetText(self.card.text)
 end
 
 function game:mousepressed(x, y, button)
