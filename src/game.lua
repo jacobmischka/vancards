@@ -20,6 +20,7 @@ local CANVAS_HEIGHT = 1200
 local FRAME_WIDTH = (CANVAS_WIDTH - MAT_WIDTH) / 2
 local CENTER_X = CANVAS_WIDTH / 2
 local CENTER_Y = CANVAS_HEIGHT / 2
+local HAND_OFFSET = 60
 
 love.graphics.setNewFont(24)
 
@@ -72,17 +73,17 @@ function game:init()
 	}
 
 	self.zones.p1.vanguard = zone:new()
-	self.zones.p1.vanguard:init(CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + PADDING, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.vanguard:init(CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
 	self.zones.p1.rearBackLeft = zone:new()
-	self.zones.p1.rearBackLeft:init(CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.rearBackLeft:init(CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
 	self.zones.p1.rearBackCenter = zone:new()
-	self.zones.p1.rearBackCenter:init(CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.rearBackCenter:init(CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
 	self.zones.p1.rearBackRight = zone:new()
-	self.zones.p1.rearBackRight:init(CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.rearBackRight:init(CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
 	self.zones.p1.rearFrontLeft = zone:new()
-	self.zones.p1.rearFrontLeft:init(CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.rearFrontLeft:init(CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
 	self.zones.p1.rearFrontRight = zone:new()
-	self.zones.p1.rearFrontRight:init(CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.rearFrontRight:init(CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
 
 	self.zones.p1.deck = zone:new()
 	self.zones.p1.deck:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 4) - (ZONE_HEIGHT * 2), ZONE_HEIGHT, ZONE_HEIGHT, false, 50)
@@ -246,23 +247,23 @@ function game:draw()
 	love.graphics.setColor(15, 15, 15)
 	love.graphics.rectangle("fill", CENTER_X - (MAT_WIDTH / 2), 0, MAT_WIDTH, CANVAS_HEIGHT)
 	love.graphics.setColor(255, 255, 255)
-	love.graphics.draw(self.playmat.guardian, CENTER_X - (GUARD_WIDTH / 2), CENTER_Y - (GUARD_HEIGHT / 2))
+	love.graphics.draw(self.playmat.guardian, CENTER_X - (GUARD_WIDTH / 2), CENTER_Y - (GUARD_HEIGHT / 2) - HAND_OFFSET)
 
 	-- P1 rearguard & vanguard
-	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING + CIRCLE_WIDTH + PADDING) -- P1 back left
-	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + PADDING + CIRCLE_WIDTH + PADDING) -- P1 back center
-	love.graphics.draw(self.playmat.rearguard, CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING + CIRCLE_WIDTH + PADDING) -- P1 back right
-	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING) -- P1 front left
-	love.graphics.draw(self.playmat.rearguard, CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING) -- P1 front right
-	love.graphics.draw(self.playmat.vanguard, CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + PADDING) -- P1 vanguard
+	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING + CIRCLE_WIDTH + PADDING - HAND_OFFSET) -- P1 back left
+	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + PADDING + CIRCLE_WIDTH + PADDING - HAND_OFFSET) -- P1 back center
+	love.graphics.draw(self.playmat.rearguard, CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING + CIRCLE_WIDTH + PADDING - HAND_OFFSET) -- P1 back right
+	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET) -- P1 front left
+	love.graphics.draw(self.playmat.rearguard, CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET) -- P1 front right
+	love.graphics.draw(self.playmat.vanguard, CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET) -- P1 vanguard
 
 	-- P2 rearguard & vanguard
-	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH - PADDING - CIRCLE_WIDTH) -- P2 back left
-	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH - PADDING - CIRCLE_WIDTH) -- P2 back center
-	love.graphics.draw(self.playmat.rearguard, CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH - PADDING - CIRCLE_WIDTH) -- P2 back right
-	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH) -- P2 front left
-	love.graphics.draw(self.playmat.rearguard, CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH) -- P2 front right
-	love.graphics.draw(self.playmat.vanguard, CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH) -- P2 vanguard
+	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH - PADDING - CIRCLE_WIDTH - HAND_OFFSET) -- P2 back left
+	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH - PADDING - CIRCLE_WIDTH - HAND_OFFSET) -- P2 back center
+	love.graphics.draw(self.playmat.rearguard, CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH - PADDING - CIRCLE_WIDTH - HAND_OFFSET) -- P2 back right
+	love.graphics.draw(self.playmat.rearguard, CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH - HAND_OFFSET) -- P2 front left
+	love.graphics.draw(self.playmat.rearguard, CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH - HAND_OFFSET) -- P2 front right
+	love.graphics.draw(self.playmat.vanguard, CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y - (GUARD_HEIGHT / 2) - PADDING - CIRCLE_WIDTH - HAND_OFFSET) -- P2 vanguard
 
 	-- P1 zones
 	love.graphics.draw(self.playmat.zoneDamage, CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 3) - DAMAGE_HEIGHT) -- P1 damage
