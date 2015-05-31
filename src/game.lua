@@ -25,6 +25,7 @@ local HAND_OFFSET = 60
 local game = {}
 
 function game:init()
+    math.randomseed(os.time())
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	self.guiFont = love.graphics.newFont("res/font.ttf", 12)
@@ -120,6 +121,15 @@ function game:init()
     self.toolbox:SetPos(canvasX(FRAME_WIDTH + MAT_WIDTH), canvasY(0)):ShowCloseButton(false):SetSize(canvasX(FRAME_WIDTH), canvasY(CANVAS_HEIGHT / 2))
     self.toolbox:SetDraggable(false)
     self.toolbox:SetName("Toolbox")
+    self.toolList = loveframes.Create("list", self.toolbox)
+    self.shuffle = loveframes.Create("button")
+    self.shuffle:SetText("Shuffle"):SetClickable(true)
+    self.toolList:AddItem(self.shuffle)
+    local deck = self.zones.p1.deck
+    self.shuffle.OnClick = function(object, x, y)
+        shuffle(deck)
+    end
+
 
 	self.chat = loveframes.Create("frame")
 	self.chat:SetPos(canvasX(FRAME_WIDTH + MAT_WIDTH), canvasY(CANVAS_HEIGHT / 2)):ShowCloseButton(false):SetSize(canvasX(FRAME_WIDTH), canvasY(CANVAS_HEIGHT / 2))
@@ -327,6 +337,14 @@ function game:updateCardmenu(card)
     self.race:SetText(self.card.race)
     self.clan:SetText(self.card.clan)
     self.text:SetText(self.card.text)
+end
+
+function shuffle(deck)
+    local cards = deck.cards
+    deck.cards = {}
+    for i=1,#cards do
+        table.insert(deck.cards, table.remove(cards, math.random(1, #cards)))
+    end
 end
 
 function game:mousepressed(x, y, button)
