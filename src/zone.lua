@@ -10,21 +10,30 @@ function zone:new()
     o.width = 0
     o.height = 0
 
-    o.border = false
+    o.orientation = "forward"
+    o.face = "up"
+
     o.capacity = 0
     o.cards = nil
 
     return o
 end
 
-function zone:init(x, y, width, height, border, capacity)
+function zone:init(x, y, width, height, face, orientation, capacity)
     self.x = x
     self.y = y
     self.width = width
     self.height = height
     self.cards = {}
 
-    self.border = border or false
+    if orientation == "forward" or orientation == "sideward" then
+        self.orientation = orientation
+    end
+
+    if face == "up" or face == "down" then
+        self.face = face
+    end
+
     self.capacity = capacity or 1
 end
 
@@ -33,7 +42,6 @@ function zone:contains(x, y)
 end
 
 function zone:draw()
-    if self.border then love.graphics.rectangle("line", self.x, self.y, self.width, self.height) end
     for i,card in ipairs(self.cards) do
         card:draw()
     end
@@ -47,7 +55,8 @@ function zone:addCard(card)
         table.insert(self.cards, card)
         if card.zone then card.zone:removeCard(card) end
         card.zone = self
-        card:flip("up")
+        card:flip(self.face)
+        card:rotate(self.orientation)
     else
         card.x = card.dragging.x0
         card.y = card.dragging.y0
