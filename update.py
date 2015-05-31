@@ -20,7 +20,8 @@ with open("cards.json", "w") as file:
                     else:
                         string = span.string
                     words = str(string).split(": ")
-                    card[words[0]] = words[1]
+                    if words[1] != "-":
+                        card[words[0]] = words[1]
                 else:
                     if span.text == "[Nation]: ":
                         src = span.find("img")["src"]
@@ -35,7 +36,8 @@ with open("cards.json", "w") as file:
             elif span.string:
                 if "[Race]" in span.string or "[Clan]" in span.string:
                     words = str(span.string).split(": ")
-                    card[words[0]] = words[1]
+                    if words[1] != "-":
+                        card[words[0]] = words[1]
                 elif "[Name]" not in card:
                     card["[Name]"] = span.string
                 elif "[Number]" not in card:
@@ -43,11 +45,13 @@ with open("cards.json", "w") as file:
                 elif "[Flavor Text]" not in card:
                     text = span.decode(formatter=None)
                     text = text[6:-7]
-                    card["[Flavor Text]"] = text
+                    if text != "-":
+                        card["[Flavor Text]"] = text
                 else:
                     text = span.decode(formatter=None)
                     text = text[6:-7]
-                    card["[Text]"] = text
+                    if text != "-":
+                        card["[Text]"] = text
 
         src = tr.find("th").find("img")['src']
         if str(src).endswith(".jpg"):
