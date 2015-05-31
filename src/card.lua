@@ -53,8 +53,13 @@ function card:init(x, y)
 end
 
 function card:contains(x, y)
-	return x >= self.x - self.face:getWidth()/2 and x <= self.x + self.face:getWidth()/2
-	and y >= self.y - self.face:getHeight()/2 and y <= self.y + self.face:getHeight()/2
+    if self.rotation == "forward" then
+    	return x >= self.x - self.face:getWidth()/2 and x <= self.x + self.face:getWidth()/2
+    	and y >= self.y - self.face:getHeight()/2 and y <= self.y + self.face:getHeight()/2
+    else
+        return x >= self.x - self.face:getHeight()/2 and x <= self.x + self.face:getHeight()/2
+        and y >= self.y - self.face:getWidth()/2 and y <= self.y + self.face:getWidth()/2
+    end
 end
 
 function card:draw()
