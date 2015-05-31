@@ -71,6 +71,8 @@ function card:draw()
         love.graphics.setColor(255,255,255,255)
     elseif self.orientation == "down" then
         love.graphics.draw(self.sleeve.bottom, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.bottom:getWidth()/2), math.floor(self.sleeve.bottom:getHeight()/2))
+        love.graphics.draw(self.sleeve.border, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.border:getWidth()/2), math.floor(self.sleeve.border:getHeight()/2))
+    	love.graphics.draw(self.sleeve.top, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.top:getWidth()/2), math.floor(self.sleeve.top:getHeight()/2))
     end
 end
 
