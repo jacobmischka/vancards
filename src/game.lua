@@ -377,7 +377,7 @@ function game:mousereleased(x, y, button)
 	-- y = (y/love.graphics.getHeight())*CANVAS_HEIGHT
 	if button == "l" and self.card then
 		for k,zone in pairs(self.zones.p1) do
-			if zone:contains(self.card.x, self.card.y) then
+			if zone:contains(self.card.x, self.card.y) and zone ~= self.card.zone then
 				zone:addCard(self.card)
 				self.card = nil
 				break
