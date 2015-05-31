@@ -29,7 +29,7 @@ function game:init()
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	self.guiFont = love.graphics.newFont("res/font.ttf", 12)
-	self.cardFont = love.graphics.newFont("res/font.ttf", 24)
+	self.cardFont = love.graphics.newImageFont("res/font.png", "0123456789")
 	love.graphics.setFont(self.cardFont)
 
 	self.bg = love.graphics.newImage("res/table_bg.png")
