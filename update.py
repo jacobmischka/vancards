@@ -50,27 +50,25 @@ with open("cards.json", "w") as file:
                     card["[Text]"] = text
 
         src = tr.find("th").find("img")['src']
-        filename = str(card["[Number]"]).replace("/", "-")+".jpg"
-        card["[Image]"] = filename
-        # if str(src).endswith(".jpg"):
-        #     filename = str(card["[Number]"]).replace("/", "-")+".jpg"
-        #     attempts = 3
-        #     while not os.path.isfile("cardfaces/"+filename):
-        #         try:
-        #             data = urllib.request.urlopen("http://cf-vanguard.com/en/cardlist/"+str(src), None, 10).read()
-        #             with open("cardfaces/"+filename, "wb") as img:
-        #                 img.write(data)
-        #             card["[Image]"] = filename
-        #         except socket.timeout:
-        #             attempts -= 1
-        #             print("timeout (10s): http://cf-vanguard.com/en/cardlist/"+str(src))
-        #             if attempts > 0:
-        #                 print("retrying...")
-        #             else:
-        #                 break
-        #         except (urllib.error.HTTPError, urllib.error.URLError):
-        #             print("error downloading: http://cf-vanguard.com/en/cardlist/"+str(src))
-        #             break
+        if str(src).endswith(".jpg"):
+            filename = str(card["[Number]"]).replace("/", "-")+".jpg"
+            attempts = 3
+            while not os.path.isfile("cardfaces/"+filename):
+                try:
+                    data = urllib.request.urlopen("http://cf-vanguard.com/en/cardlist/"+str(src), None, 10).read()
+                    with open("cardfaces/"+filename, "wb") as img:
+                        img.write(data)
+                    card["[Image]"] = filename
+                except socket.timeout:
+                    attempts -= 1
+                    print("timeout (10s): http://cf-vanguard.com/en/cardlist/"+str(src))
+                    if attempts > 0:
+                        print("retrying...")
+                    else:
+                        break
+                except (urllib.error.HTTPError, urllib.error.URLError):
+                    print("error downloading: http://cf-vanguard.com/en/cardlist/"+str(src))
+                    break
 
         cards.append(card)
         print(str(len(cards))+" / "+str(len(trs)))
