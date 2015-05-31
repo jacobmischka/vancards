@@ -92,8 +92,14 @@ function game:init()
 		card:flip("down")
 	end
 
+	self.zones.p1.drop = zone:new()
+	self.zones.p1.drop:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 3) - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, false, 60)
+
 	self.zones.p1.damage = zone:new()
-	self.zones.p1.damage:init(431, 778, 209, 288, false)
+	self.zones.p1.damage:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 3) - DAMAGE_HEIGHT, ZONE_HEIGHT, DAMAGE_HEIGHT, false, 6)
+
+	self.zones.p1.gunit = zone:new()
+	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, false, 8)
 
 	local f = assert(io.open("cards.json", "r"))
 	local t = f:read("*all")
