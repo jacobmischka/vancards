@@ -78,10 +78,15 @@ function card:draw()
 end
 
 function card:drawText()
-	local rotation = 0
-	if self.rotation == "sideward" then rotation = math.pi/2 end
-	love.graphics.print(self.power, self.x-math.floor(self.face:getWidth()/2), self.y+math.floor(self.face:getWidth()/2), rotation)
-	love.graphics.print(self.shield, self.x-math.floor(self.face:getWidth()/4), self.y-math.floor(self.face:getHeight()/4), math.pi/2+rotation)
+	if self.rotation == "forward" then
+		love.graphics.print(self.grade, self.x-math.floor(self.face:getWidth()/2), self.y-math.floor(self.face:getHeight()/2))
+		love.graphics.print(self.power, self.x-math.floor(self.face:getWidth()/2), self.y+math.floor(self.face:getWidth()/2))
+		love.graphics.print(self.shield, self.x-math.floor(self.face:getWidth()/4), self.y-math.floor(self.face:getHeight()/4), math.pi/2)
+	else
+		love.graphics.print(self.grade, self.x+math.floor(self.face:getHeight()/2), self.y-math.floor(self.face:getWidth()/2), math.pi/2)
+		love.graphics.print(self.power, self.x-math.floor(self.face:getWidth()/2), self.y-math.floor(self.face:getWidth()/2), math.pi/2)
+		love.graphics.print(self.shield, self.x+math.floor(self.face:getWidth()/4), self.y-math.floor(self.face:getWidth()/4), math.pi)
+	end
 end
 
 function card:flip(orientation)
