@@ -13,13 +13,15 @@ function zone:new()
     o.orientation = "forward"
     o.face = "up"
 
+    o.positioner = nil
+
     o.capacity = 0
     o.cards = nil
 
     return o
 end
 
-function zone:init(x, y, width, height, face, orientation, capacity)
+function zone:init(x, y, width, height, face, orientation, capacity, positioner)
     self.x = x
     self.y = y
     self.width = width
@@ -35,6 +37,8 @@ function zone:init(x, y, width, height, face, orientation, capacity)
     end
 
     self.capacity = capacity or 1
+
+    self.positioner = positioner
 end
 
 function zone:contains(x, y)
@@ -47,10 +51,20 @@ function zone:draw()
     end
 end
 
+function zone:position()
+    for i, card in ipairs(self.cards) do
+        if self.positioner then
+            self.positioner(i, card, zone)
+        else
+            card.x = self.x + self.width/2
+            card.y = self.y + self.height/2
+        end
+    end
+end
+
 function zone:addCard(card)
     if(#self.cards < self.capacity) then
-        card.x = self.x + self.width/2
-        card.y = self.y + self.height/2
+        self:position()
         card.dragging.active = false
         table.insert(self.cards, card)
         if card.zone then card.zone:removeCard(card) end
