@@ -17,6 +17,7 @@ local MAT_WIDTH = (CIRCLE_WIDTH * 3) + (ZONE_HEIGHT * 2) + (PADDING * 14)
 local DAMAGE_HEIGHT = ZONE_HEIGHT * 2 + PADDING
 local CANVAS_WIDTH = 1920
 local CANVAS_HEIGHT = 1200
+local FRAME_WIDTH = (CANVAS_WIDTH - MAT_WIDTH) / 2
 local CENTER_X = CANVAS_WIDTH / 2
 local CENTER_Y = CANVAS_HEIGHT / 2
 
@@ -103,11 +104,19 @@ function game:init()
 	end
 
 	self.frame = loveframes.Create("frame")
-	self.frame:SetPos(canvasX(0), canvasY(0)):ShowCloseButton(false):SetSize(canvasX(415), canvasY(CANVAS_HEIGHT))
+	self.frame:SetPos(canvasX(0), canvasY(0)):ShowCloseButton(false):SetSize(canvasX(FRAME_WIDTH), canvasY(CANVAS_HEIGHT))
     self.frame:SetDraggable(false)
+    self.frame:SetName("Info")
 
-	--self.chat = loveframes.Create("frame")
-	--self.chat:SetPos(canvasX(1505), canvasY(0)):ShowCloseButton(false):SetSize(canvasX(415), canvasY(CANVAS_HEIGHT))
+    self.toolbox = loveframes.Create("frame")
+    self.toolbox:SetPos(canvasX(FRAME_WIDTH + MAT_WIDTH), canvasY(0)):ShowCloseButton(false):SetSize(canvasX(FRAME_WIDTH), canvasY(CANVAS_HEIGHT / 2))
+    self.toolbox:SetDraggable(false)
+    self.toolbox:SetName("Toolbox")
+
+	self.chat = loveframes.Create("frame")
+	self.chat:SetPos(canvasX(FRAME_WIDTH + MAT_WIDTH), canvasY(CANVAS_HEIGHT / 2)):ShowCloseButton(false):SetSize(canvasX(FRAME_WIDTH), canvasY(CANVAS_HEIGHT / 2))
+	self.chat:SetDraggable(false)
+	self.chat:SetName("Chat")
 
 	self.list = loveframes.Create("list", self.frame)
 	self.list:SetPos(canvasX(14), canvasY(49)):SetSize(canvasX(388), canvasY(1017))
