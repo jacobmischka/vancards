@@ -22,12 +22,14 @@ local CENTER_X = CANVAS_WIDTH / 2
 local CENTER_Y = CANVAS_HEIGHT / 2
 local HAND_OFFSET = 60
 
-love.graphics.setNewFont(24)
-
 local game = {}
 
 function game:init()
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+
+	self.guiFont = love.graphics.newFont("res/font.ttf", 12)
+	self.cardFont = love.graphics.newFont("res/font.ttf", 24)
+	love.graphics.setFont(self.cardFont)
 
 	self.bg = love.graphics.newImage("res/table_bg.png")
 	self.playmat = {
@@ -73,33 +75,32 @@ function game:init()
 	}
 
 	self.zones.p1.vanguard = zone:new()
-	self.zones.p1.vanguard:init(CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.vanguard:init(CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
 	self.zones.p1.rearBackLeft = zone:new()
-	self.zones.p1.rearBackLeft:init(CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.rearBackLeft:init(CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
 	self.zones.p1.rearBackCenter = zone:new()
-	self.zones.p1.rearBackCenter:init(CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.rearBackCenter:init(CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
 	self.zones.p1.rearBackRight = zone:new()
-	self.zones.p1.rearBackRight:init(CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.rearBackRight:init(CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
 	self.zones.p1.rearFrontLeft = zone:new()
-	self.zones.p1.rearFrontLeft:init(CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.rearFrontLeft:init(CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
 	self.zones.p1.rearFrontRight = zone:new()
-	self.zones.p1.rearFrontRight:init(CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, false)
+	self.zones.p1.rearFrontRight:init(CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
 
 	self.zones.p1.deck = zone:new()
-	self.zones.p1.deck:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 4) - (ZONE_HEIGHT * 2), ZONE_HEIGHT, ZONE_HEIGHT, false, 50)
+	self.zones.p1.deck:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 4) - (ZONE_HEIGHT * 2), ZONE_HEIGHT, ZONE_HEIGHT, "down", "forward", 50)
 	self.zones.p1.deck.addCard = function(self, card)
 		self.__index.addCard(self, card)
-		card:flip("down")
 	end
 
 	self.zones.p1.drop = zone:new()
-	self.zones.p1.drop:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 3) - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, false, 60)
+	self.zones.p1.drop:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 3) - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "up", "forward", 60)
 
 	self.zones.p1.damage = zone:new()
-	self.zones.p1.damage:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 3) - DAMAGE_HEIGHT, ZONE_HEIGHT, DAMAGE_HEIGHT, false, 6)
+	self.zones.p1.damage:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 3) - DAMAGE_HEIGHT, ZONE_HEIGHT, DAMAGE_HEIGHT, "up", "sideward", 6)
 
 	self.zones.p1.gunit = zone:new()
-	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, false, 8)
+	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "down", "forward", 8)
 
 	local f = assert(io.open("cards.json", "r"))
 	local t = f:read("*all")
