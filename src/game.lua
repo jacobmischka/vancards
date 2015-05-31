@@ -318,8 +318,15 @@ function game:draw()
         self.card:draw()
     else
         local hoverCard = self:clickedCard(mouseX(), mouseY())
-        if hoverCard and hoverCard.zone == self.zones.p1.hand then
-            hoverCard:draw()
+        if hoverCard then
+            if hoverCard.zone == self.zones.p1.hand then
+                hoverCard:draw()
+            end
+            if hoverCard.orientation == "up" then
+                if hoverCard.zone ~= self.zones.p1.damage and hoverCard.zone ~= self.zones.p1.gunit then
+                    hoverCard:drawText()
+                end
+            end
         end
     end
 

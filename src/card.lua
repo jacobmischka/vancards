@@ -70,15 +70,20 @@ function card:draw()
     	if self.face then love.graphics.draw(self.face, self.x, self.y, rotation, 1, 1, math.floor(self.face:getWidth()/2), math.floor(self.face:getHeight()/2)) end
     	love.graphics.draw(self.sleeve.border, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.border:getWidth()/2), math.floor(self.sleeve.border:getHeight()/2))
     	love.graphics.draw(self.sleeve.top, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.top:getWidth()/2), math.floor(self.sleeve.top:getHeight()/2))
-        love.graphics.setColor(0,0,0,255)
-        love.graphics.print(self.power, self.x-math.floor(self.face:getWidth()/2), self.y+math.floor(self.face:getWidth()/2), rotation)
-        love.graphics.print(self.shield, self.x-math.floor(self.face:getWidth()/4), self.y-math.floor(self.face:getHeight()/4), math.pi/2+rotation)
-        love.graphics.setColor(255,255,255,255)
     elseif self.orientation == "down" then
         love.graphics.draw(self.sleeve.bottom, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.bottom:getWidth()/2), math.floor(self.sleeve.bottom:getHeight()/2))
         love.graphics.draw(self.sleeve.border, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.border:getWidth()/2), math.floor(self.sleeve.border:getHeight()/2))
     	love.graphics.draw(self.sleeve.top, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.top:getWidth()/2), math.floor(self.sleeve.top:getHeight()/2))
     end
+end
+
+function card:drawText()
+	local rotation = 0
+	if self.rotation == "sideward" then rotation = math.pi/2 end
+	love.graphics.setColor(0,0,0,255)
+	love.graphics.print(self.power, self.x-math.floor(self.face:getWidth()/2), self.y+math.floor(self.face:getWidth()/2), rotation)
+	love.graphics.print(self.shield, self.x-math.floor(self.face:getWidth()/4), self.y-math.floor(self.face:getHeight()/4), math.pi/2+rotation)
+	love.graphics.setColor(255,255,255,255)
 end
 
 function card:flip(orientation)
