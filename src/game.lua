@@ -20,7 +20,7 @@ CANVAS_HEIGHT = 1200
 FRAME_WIDTH = (CANVAS_WIDTH - MAT_WIDTH) / 2
 CENTER_X = CANVAS_WIDTH / 2
 CENTER_Y = CANVAS_HEIGHT / 2
-HAND_OFFSET = 60
+HAND_OFFSET = 63
 
 local game = {}
 
@@ -106,6 +106,18 @@ function game:init()
 	self.zones.p1.gunit = zone:new()
 	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "down", "forward", 8)
 
+	self.zones.p1.hand = zone:new()
+	self.zones.p1.hand:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH, CANVAS_HEIGHT - CARD_LENGTH, (CIRCLE_WIDTH * 3) + (PADDING * 2), CARD_LENGTH, "up", "forward", 60, function(i, card, zone)
+		local max = zone.width - CARD_WIDTH
+		local w = #zone.cards * CARD_WIDTH + (PADDING * (#zone.cards - 1))
+		local s = CARD_WIDTH + PADDING
+		if w > max then
+			s = max / #zone.cards
+		end
+		card.x = zone.x + (CARD_WIDTH / 2) + (max / 2) + ((i - 1) * s) - ((s * (#zone.cards - 1)) / 2) - PADDING
+		card.y = zone.y + (CARD_LENGTH / 2)
+	end)
+
 	local f = assert(io.open("cards.json", "r"))
 	local t = f:read("*all")
 	f:close()
@@ -132,7 +144,6 @@ function game:init()
     self.shuffle.OnClick = function(object, x, y)
         shuffle(deck)
     end
-
 
 	self.chat = loveframes.Create("frame")
 	self.chat:SetPos(canvasX(FRAME_WIDTH + MAT_WIDTH), canvasY(CANVAS_HEIGHT / 2)):ShowCloseButton(false):SetSize(canvasX(FRAME_WIDTH), canvasY(CANVAS_HEIGHT / 2))
