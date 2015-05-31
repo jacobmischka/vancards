@@ -97,11 +97,14 @@ function game:init()
 	self.zones.p1.damage = zone:new()
 	self.zones.p1.damage:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 3) - DAMAGE_HEIGHT, ZONE_HEIGHT, DAMAGE_HEIGHT, "up", "sideward", 6, "flip", function(i, card, zone)
 		card.x = zone.x + (CARD_LENGTH / 2) + (PADDING * 2)
-		card.y = zone.y + (CARD_WIDTH / 2) + (PADDING * 2) - 1 + ((i - 1) * ((DAMAGE_HEIGHT - CARD_WIDTH - (PADDING * 4)) / 5))
+		card.y = zone.y + math.floor((CARD_WIDTH / 2) + (PADDING * 2) - 1 + ((i - 1) * ((DAMAGE_HEIGHT - CARD_WIDTH - (PADDING * 4)) / 5)))
 	end)
 
 	self.zones.p1.gunit = zone:new()
-	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "down", "forward", 8, "none")
+	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "up", "forward", 8, "none", function(i, card, zone)
+		card.x = zone.x + math.floor((CARD_WIDTH / 2) + (PADDING * 2) + ((i - 1) * ((ZONE_HEIGHT - CARD_WIDTH - (PADDING * 2)) / 8.5)))
+		card.y = zone.y + (CARD_LENGTH / 2) + (PADDING * 2)
+	end)
 
     self.zones.p1.hand = zone:new()
 	self.zones.p1.hand:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH, CANVAS_HEIGHT - CARD_LENGTH, (CIRCLE_WIDTH * 3) + (PADDING * 2), CARD_LENGTH, "up", "forward", 60, "none", function(i, card, zone)
@@ -111,7 +114,7 @@ function game:init()
 		if w > max then
 			s = max / #zone.cards
 		end
-		card.x = zone.x + (CARD_WIDTH / 2) + (max / 2) + ((i - 1) * s) - ((s * (#zone.cards - 1)) / 2) - PADDING
+		card.x = zone.x + math.floor((CARD_WIDTH / 2) + (max / 2) + ((i - 1) * s) - ((s * (#zone.cards - 1)) / 2) - PADDING)
 		card.y = zone.y + (CARD_LENGTH / 2)
 	end)
 
