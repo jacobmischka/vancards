@@ -21,7 +21,7 @@ function zone:new()
     return o
 end
 
-function zone:init(x, y, width, height, face, orientation, capacity, positioner)
+function zone:init(x, y, width, height, face, orientation, capacity, action, positioner)
     self.x = x
     self.y = y
     self.width = width
@@ -39,6 +39,7 @@ function zone:init(x, y, width, height, face, orientation, capacity, positioner)
     self.capacity = capacity or 1
 
     self.positioner = positioner
+    self.action = action or "rotate"
 end
 
 function zone:contains(x, y)
@@ -59,6 +60,14 @@ function zone:position()
             card.x = self.x + self.width/2
             card.y = self.y + self.height/2
         end
+    end
+end
+
+function zone:execute(card)
+    if self.action == "flip" then
+        card:flip()
+    elseif self.action == "rotate" then
+        card:rotate()
     end
 end
 

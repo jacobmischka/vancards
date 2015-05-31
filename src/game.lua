@@ -20,7 +20,7 @@ CANVAS_HEIGHT = 1200
 FRAME_WIDTH = (CANVAS_WIDTH - MAT_WIDTH) / 2
 CENTER_X = CANVAS_WIDTH / 2
 CENTER_Y = CANVAS_HEIGHT / 2
-HAND_OFFSET = 63
+HAND_OFFSET = 60
 
 local game = {}
 
@@ -89,25 +89,22 @@ function game:init()
 	self.zones.p1.rearFrontRight:init(CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
 
 	self.zones.p1.deck = zone:new()
-	self.zones.p1.deck:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 4) - (ZONE_HEIGHT * 2), ZONE_HEIGHT, ZONE_HEIGHT, "down", "forward", 50)
-	self.zones.p1.deck.addCard = function(self, card)
-		self.__index.addCard(self, card)
-	end
+	self.zones.p1.deck:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 4) - (ZONE_HEIGHT * 2), ZONE_HEIGHT, ZONE_HEIGHT, "down", "forward", 50, "none")
 
 	self.zones.p1.drop = zone:new()
-	self.zones.p1.drop:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 3) - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "up", "forward", 60)
+	self.zones.p1.drop:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 3) - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "up", "forward", 60, "none")
 
 	self.zones.p1.damage = zone:new()
-	self.zones.p1.damage:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 3) - DAMAGE_HEIGHT, ZONE_HEIGHT, DAMAGE_HEIGHT, "up", "sideward", 6, function(i, card, zone)
+	self.zones.p1.damage:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 3) - DAMAGE_HEIGHT, ZONE_HEIGHT, DAMAGE_HEIGHT, "up", "sideward", 6, "flip", function(i, card, zone)
 		card.x = zone.x + (CARD_LENGTH / 2) + (PADDING * 2)
 		card.y = zone.y + (CARD_WIDTH / 2) + (PADDING * 2) - 1 + ((i - 1) * ((DAMAGE_HEIGHT - CARD_WIDTH - (PADDING * 4)) / 5))
 	end)
 
 	self.zones.p1.gunit = zone:new()
-	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "down", "forward", 8)
+	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "down", "forward", 8, "none")
 
-	self.zones.p1.hand = zone:new()
-	self.zones.p1.hand:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH, CANVAS_HEIGHT - CARD_LENGTH, (CIRCLE_WIDTH * 3) + (PADDING * 2), CARD_LENGTH, "up", "forward", 60, function(i, card, zone)
+    self.zones.p1.hand = zone:new()
+	self.zones.p1.hand:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH, CANVAS_HEIGHT - CARD_LENGTH, (CIRCLE_WIDTH * 3) + (PADDING * 2), CARD_LENGTH, "up", "forward", 60, "none", function(i, card, zone)
 		local max = zone.width - CARD_WIDTH
 		local w = #zone.cards * CARD_WIDTH + (PADDING * (#zone.cards - 1))
 		local s = CARD_WIDTH + PADDING
@@ -144,6 +141,7 @@ function game:init()
     self.shuffle.OnClick = function(object, x, y)
         shuffle(deck)
     end
+
 
 	self.chat = loveframes.Create("frame")
 	self.chat:SetPos(canvasX(FRAME_WIDTH + MAT_WIDTH), canvasY(CANVAS_HEIGHT / 2)):ShowCloseButton(false):SetSize(canvasX(FRAME_WIDTH), canvasY(CANVAS_HEIGHT / 2))
@@ -400,15 +398,8 @@ function game:mousereleased(x, y, button)
 			self.card.dragging.active = false
 		end
 	elseif button == "r" and self.card then
-		local card = self.card
-		if self.cardcontext then
-			self.cardcontext:Remove()
-			self.cardcontext = nil
-		end
-		self.cardcontext = loveframes.Create("menu")
-		self.cardcontext:AddOption("Rotate", false, function() card:rotate() end)
-		self.cardcontext:AddOption("Flip", false, function() card:flip() end)
-		self.cardcontext:SetPos(x, y)
+        local card = self.card
+		card.zone:execute(card)
 	end
 	self.card = nil
 end
