@@ -104,6 +104,7 @@ function game:init()
 
 	self.frame = loveframes.Create("frame")
 	self.frame:SetPos(canvasX(0), canvasY(0)):ShowCloseButton(false):SetSize(canvasX(415), canvasY(CANVAS_HEIGHT))
+    self.frame:SetDraggable(false)
 
 	--self.chat = loveframes.Create("frame")
 	--self.chat:SetPos(canvasX(1505), canvasY(0)):ShowCloseButton(false):SetSize(canvasX(415), canvasY(CANVAS_HEIGHT))
@@ -116,9 +117,14 @@ function game:init()
 
 	local numbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
 
+    self.imageForm = loveframes.Create("form")
+    self.imageForm:SetLayoutType("horizontal"):SetName("")
 	self.image = loveframes.Create("image")
 	self.image:SetImage("res/sleeve_back.png")
-	self.list:AddItem(self.image)
+    self.grade = loveframes.Create("text")
+    self.grade:SetText("0")
+    self.imageForm:AddItem(self.image):AddItem(self.grade)
+	self.list:AddItem(self.imageForm)
 
 	self.powerForm = loveframes.Create("form")
 	self.powerForm:SetLayoutType("horizontal"):SetName("Power")
@@ -149,6 +155,56 @@ function game:init()
     self.baseshield:SetDefaultColor(100,0,0,255):SetText("0")
     self.shieldForm:AddItem(self.shield):AddItem(self.baseshield)
 	self.list:AddItem(self.shieldForm)
+
+    self.criticalForm = loveframes.Create("form")
+    self.criticalForm:SetLayoutType("horizontal"):SetName("Critical")
+    self.critical = loveframes.Create("textinput")
+    self.critical:SetEditable(true):SetMultiline(false):SetUsable(numbers)
+    self.critical:SetText("0"):SetWidth(canvasX(200))
+    self.critical.OnEnter = function(object, text)
+        if self.menucard then
+            self.menucard.critical = text
+        end
+    end
+    self.basecritical = loveframes.Create("text")
+    self.basecritical:SetDefaultColor(100,0,0,255):SetText("0")
+    self.criticalForm:AddItem(self.critical):AddItem(self.basecritical)
+    self.list:AddItem(self.criticalForm)
+
+    self.skillForm = loveframes.Create("form")
+    self.skillForm:SetLayoutType("horizontal"):SetName("Skill")
+    self.skill = loveframes.Create("text")
+    self.skill:SetText("-")
+    self.skillForm:AddItem(self.skill)
+    self.list:AddItem(self.skillForm)
+
+    self.triggerForm = loveframes.Create("form")
+    self.triggerForm:SetLayoutType("horizontal"):SetName("Trigger")
+    self.trigger = loveframes.Create("text")
+    self.trigger:SetText("-")
+    self.triggerForm:AddItem(self.trigger)
+    self.list:AddItem(self.triggerForm)
+
+    self.nationForm = loveframes.Create("form")
+    self.nationForm:SetLayoutType("horizontal"):SetName("Nation")
+    self.nation = loveframes.Create("text")
+    self.nation:SetText("-")
+    self.nationForm:AddItem(self.nation)
+    self.list:AddItem(self.nationForm)
+
+    self.raceForm = loveframes.Create("form")
+    self.raceForm:SetLayoutType("horizontal"):SetName("Race")
+    self.race = loveframes.Create("text")
+    self.race:SetText("-")
+    self.raceForm:AddItem(self.race)
+    self.list:AddItem(self.raceForm)
+
+    self.clanForm = loveframes.Create("form")
+    self.clanForm:SetLayoutType("horizontal"):SetName("Clan")
+    self.clan = loveframes.Create("text")
+    self.clan:SetText("-")
+    self.clanForm:AddItem(self.clan)
+    self.list:AddItem(self.clanForm)
 
 	self.text = loveframes.Create("text")
 	self.list:AddItem(self.text)
@@ -241,10 +297,18 @@ function game:updateCardmenu(card)
     self.menucard = card
     self.frame:SetName(self.card.name)
     self.image:SetImage(self.card.face)
+    self.grade:SetText(self.card.grade)
 	self.power:SetText(self.card.power)
     self.basepower:SetText(self.card.basepower)
 	self.shield:SetText(self.card.shield)
     self.baseshield:SetText(self.card.baseshield)
+    self.critical:SetText(self.card.critical)
+    self.basecritical:SetText(self.card.basecritical)
+    self.skill:SetText(self.card.skill)
+    self.trigger:SetText(self.card.trigger)
+    self.nation:SetText(self.card.nation)
+    self.race:SetText(self.card.race)
+    self.clan:SetText(self.card.clan)
     self.text:SetText(self.card.text)
 end
 

@@ -15,15 +15,39 @@ with open("cards.json", "w") as file:
         for span in td.find_all("span"):
             if span.get("class") == ["unit"]:
                 if span.string:
+                    if span.find("span"):
+                        string = span.find("span").string
+                    else:
+                        string = span.string
+                    words = str(string).split(": ")
+                    card[words[0]] = words[1]
+                else:
+                    if span.text == "[Nation]: ":
+                        src = span.find("img")["src"]
+                        card["[Nation]"] = src[src.find("co_")+3:src.rfind(".")]
+                    elif span.text == "[Skill Icon]: ":
+                        src = span.find("img")["src"]
+                        card["[Skill]"] = src[src.find("sk_")+3:src.rfind(".")]
+                    elif "[Trigger]" in span.text:
+                        src = span.find("img")["src"]
+                        card["[Trigger]"] = src[src.find("tr_")+3:src.rfind(".")]
+
+            elif span.string:
+                if "[Race]" in span.string or "[Clan]" in span.string:
                     words = str(span.string).split(": ")
                     card[words[0]] = words[1]
-            else:
-                if "[Name]" not in card:
+                elif "[Name]" not in card:
                     card["[Name]"] = span.string
                 elif "[Number]" not in card:
                     card["[Number]"] = span.string
+                elif "[Flavor Text]" not in card:
+                    text = span.decode(formatter=None)
+                    text = text[6:-7]
+                    card["[Flavor Text]"] = text
                 else:
-                    card["[Text]"] = span.string
+                    text = span.decode(formatter=None)
+                    text = text[6:-7]
+                    card["[Text]"] = text
 
         src = tr.find("th").find("img")['src']
         if str(src).endswith(".jpg"):

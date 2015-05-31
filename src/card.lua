@@ -19,8 +19,10 @@ function card:new(json)
 	o.id = json["[Number]"]
     o.name = json["[Name]"]
 	o.critical = json["[Critical]"]
+    o.basecritical = json["[Critical]"]
 	o.grade = json["[Grade]"]
 	o.trigger = json["[Trigger]"]
+    o.nation = json["[Nation]"]
 	o.race = json["[Race]"]
 	o.clan = json["[Clan]"]
 	o.rarity = json["[Rarity]"]
@@ -28,8 +30,10 @@ function card:new(json)
 	o.power = json["[Power]"]
     o.basepower = json["[Power]"]
 	o.expansion = json["[Expansion]"]
+    o.skill = json["[Skill]"]
 	o.shield = json["[Shield]"]
     o.baseshield = json["[Shield]"]
+    o.flavortext = json["[Flavor Text]"]
 	o.text = json["[Text]"]
 
     o.orientation = "up"
