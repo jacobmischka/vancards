@@ -314,7 +314,7 @@ function game:draw()
 	for i,zone in pairs(self.zones.p1) do
 		zone:draw()
 	end
-	if self.card and (self.card.x ~= self.card.dragging.x0 or self.card.y ~= self.card.dragging.y0) then
+	if self.card and self.card.dragging.active and (self.card.x ~= self.card.dragging.x0 or self.card.y ~= self.card.dragging.y0) then
         self.card:draw()
     else
         local hoverCard = self:clickedCard(mouseX(), mouseY())
