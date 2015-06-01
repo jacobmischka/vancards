@@ -75,38 +75,38 @@ function game:init()
 		},
 	}
 
-	self.zones.p1.vanguard = zone:new()
+	self.zones.p1.vanguard = zone:new("vanguard")
 	self.zones.p1.vanguard:init(CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
-	self.zones.p1.rearBackLeft = zone:new()
+	self.zones.p1.rearBackLeft = zone:new("rearguard")
 	self.zones.p1.rearBackLeft:init(CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
-	self.zones.p1.rearBackCenter = zone:new()
+	self.zones.p1.rearBackCenter = zone:new("rearguard")
 	self.zones.p1.rearBackCenter:init(CENTER_X - (CIRCLE_WIDTH / 2), CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
-	self.zones.p1.rearBackRight = zone:new()
+	self.zones.p1.rearBackRight = zone:new("rearguard")
 	self.zones.p1.rearBackRight:init(CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + (PADDING * 2) + CIRCLE_WIDTH - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
-	self.zones.p1.rearFrontLeft = zone:new()
+	self.zones.p1.rearFrontLeft = zone:new("rearguard")
 	self.zones.p1.rearFrontLeft:init(CENTER_X - (CIRCLE_WIDTH / 2) - PADDING - CIRCLE_WIDTH, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
-	self.zones.p1.rearFrontRight = zone:new()
+	self.zones.p1.rearFrontRight = zone:new("rearguard")
 	self.zones.p1.rearFrontRight:init(CENTER_X + (CIRCLE_WIDTH / 2) + PADDING, CENTER_Y + (GUARD_HEIGHT / 2) + PADDING - HAND_OFFSET, CIRCLE_WIDTH, CIRCLE_WIDTH, "up", "forward")
 
-	self.zones.p1.deck = zone:new()
+	self.zones.p1.deck = zone:new("deck")
 	self.zones.p1.deck:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 4) - (ZONE_HEIGHT * 2), ZONE_HEIGHT, ZONE_HEIGHT, "down", "forward", 50, "none")
 
-	self.zones.p1.drop = zone:new()
+	self.zones.p1.drop = zone:new("drop")
 	self.zones.p1.drop:init(CENTER_X + (CIRCLE_WIDTH / 2) + CIRCLE_WIDTH + (PADDING * 4), CANVAS_HEIGHT - (PADDING * 3) - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "up", "forward", 60, "none")
 
-	self.zones.p1.damage = zone:new()
+	self.zones.p1.damage = zone:new("damage")
 	self.zones.p1.damage:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 3) - DAMAGE_HEIGHT, ZONE_HEIGHT, DAMAGE_HEIGHT, "up", "sideward", 6, "flip", function(i, card, zone)
 		card.x = zone.x + (CARD_LENGTH / 2) + (PADDING * 2)
 		card.y = zone.y + math.floor((CARD_WIDTH / 2) + (PADDING * 2) - 1 + ((i - 1) * ((DAMAGE_HEIGHT - CARD_WIDTH - (PADDING * 4)) / 5)))
 	end)
 
-	self.zones.p1.gunit = zone:new()
+	self.zones.p1.gunit = zone:new("gunit")
 	self.zones.p1.gunit:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH - (PADDING * 4) - ZONE_HEIGHT, CANVAS_HEIGHT - (PADDING * 4) - DAMAGE_HEIGHT - ZONE_HEIGHT, ZONE_HEIGHT, ZONE_HEIGHT, "up", "forward", 8, "flip", function(i, card, zone)
 		card.x = zone.x + math.floor((CARD_WIDTH / 2) + (PADDING * 2) + ((i - 1) * ((ZONE_HEIGHT - CARD_WIDTH - (PADDING * 2)) / 8.5)))
 		card.y = zone.y + (CARD_LENGTH / 2) + (PADDING * 2)
 	end)
 
-    self.zones.p1.hand = zone:new()
+    self.zones.p1.hand = zone:new("hand")
 	self.zones.p1.hand:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH, CANVAS_HEIGHT - CARD_LENGTH, (CIRCLE_WIDTH * 3) + (PADDING * 2), CARD_LENGTH, "up", "forward", 60, "none", function(i, card, zone)
 		local max = zone.width - CARD_WIDTH
 		local w = #zone.cards * CARD_WIDTH + (PADDING * (#zone.cards - 1))
@@ -397,6 +397,14 @@ function game:mousepressed(x, y, button)
 
 end
 
+function game:swapRearGuard(newZone, card)
+    local oldZone = card.zone
+    self.zones.p1.hand:addCard(newZone.cards[1])
+    newZone:addCard(card)
+    oldZone:addCard(self.zones.p1.hand.cards[#self.zones.p1.hand.cards])
+end
+
+
 function game:mousereleased(x, y, button)
 	loveframes.mousereleased(x, y, button)
 	-- x = (x/love.graphics.getWidth())*CANVAS_WIDTH
@@ -404,15 +412,21 @@ function game:mousereleased(x, y, button)
 	if button == "l" and self.card then
 		for k,zone in pairs(self.zones.p1) do
 			if zone:contains(self.card.x, self.card.y) and zone ~= self.card.zone then
-				zone:addCard(self.card)
+                if #zone.cards < zone.capacity then
+                    zone:addCard(self.card)
+                else
+                    if self.card.zone.type == "rearguard" and zone.type == "rearguard" then
+                        self:swapRearGuard(zone, self.card)
+                    else
+                        self.card:goBack()
+                    end
+                end
 				self.card = nil
 				break
 			end
 		end
 		if self.card then
-			self.card.x = self.card.dragging.x0
-			self.card.y = self.card.dragging.y0
-			self.card.dragging.active = false
+			self.card:goBack()
 		end
 	elseif button == "r" and self.card then
         local card = self.card

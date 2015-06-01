@@ -1,6 +1,6 @@
 local zone = {}
 
-function zone:new()
+function zone:new(type)
     o = {}
     setmetatable(o, self)
     self.__index = self
@@ -12,6 +12,8 @@ function zone:new()
 
     o.orientation = "forward"
     o.face = "up"
+
+    o.type = type
 
     o.positioner = nil
 
@@ -81,9 +83,7 @@ function zone:addCard(card)
         card:rotate(self.orientation)
         self:position()
     else
-        card.x = card.dragging.x0
-        card.y = card.dragging.y0
-        card.dragging.active = false
+        card:goBack()
     end
 end
 

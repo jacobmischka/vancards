@@ -89,6 +89,12 @@ function card:drawText()
 	end
 end
 
+function card:goBack()
+	self.x = self.dragging.x0
+	self.y = self.dragging.y0
+	self.dragging.active = false
+end
+
 function card:flip(orientation)
     if orientation then self.orientation = orientation
     elseif self.orientation == "up" then self.orientation = "down"
