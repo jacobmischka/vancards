@@ -8,8 +8,14 @@ function card:new(json)
 	o.sleeve = {
 		bottom = love.graphics.newImage("res/sleeve_back.png"),
 		border = love.graphics.newImage("res/sleeve_border.png"),
-		top = love.graphics.newImage("res/sleeve_overlay.png")
+		top = love.graphics.newImage("res/sleeve_overlay.png"),
+		back = nil,
+		color = {r = 255, g = 140, b = 60}
 	}
+
+	if love.filesystem.exists("res/cardback.png") then
+		o.sleeve.back = love.graphics.newImage("res/cardback.png")
+	end
 
 	o.x = 0
 	o.y = 0
@@ -42,6 +48,10 @@ function card:new(json)
 	o.dragging = { active = false, dx = 0, dy = 0, x0 = 0, y0 = 0}
 	o.zone = nil
 
+	if tonumber(o.grade) > 3 then
+		o.sleeve.color = {r = 60, g = 60, b = 60}
+	end
+
 	return o
 end
 
@@ -66,13 +76,26 @@ function card:draw()
 	local rotation = 0
 	if self.rotation == "sideward" then rotation = math.pi/2 end
 	if self.orientation == "up" then
+		love.graphics.setColor(self.sleeve.color.r, self.sleeve.color.g, self.sleeve.color.b, 255)
 		love.graphics.draw(self.sleeve.bottom, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.bottom:getWidth()/2), math.floor(self.sleeve.bottom:getHeight()/2))
-		if self.face then love.graphics.draw(self.face, self.x, self.y, rotation, 1, 1, math.floor(self.face:getWidth()/2), math.floor(self.face:getHeight()/2)) end
+		if self.face then
+			love.graphics.setColor(255, 255, 255, 255)
+			love.graphics.draw(self.face, self.x, self.y, rotation, 1, 1, math.floor(self.face:getWidth()/2), math.floor(self.face:getHeight()/2))
+			love.graphics.setColor(self.sleeve.color.r, self.sleeve.color.g, self.sleeve.color.b, 255)
+		end
 		love.graphics.draw(self.sleeve.border, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.border:getWidth()/2), math.floor(self.sleeve.border:getHeight()/2))
+		love.graphics.setColor(255, 255, 255, 255)
 		love.graphics.draw(self.sleeve.top, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.top:getWidth()/2), math.floor(self.sleeve.top:getHeight()/2))
 	elseif self.orientation == "down" then
+		love.graphics.setColor(self.sleeve.color.r, self.sleeve.color.g, self.sleeve.color.b, 255)
 		love.graphics.draw(self.sleeve.bottom, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.bottom:getWidth()/2), math.floor(self.sleeve.bottom:getHeight()/2))
+		if self.sleeve.back then
+			love.graphics.setColor(255, 255, 255, 255)
+			love.graphics.draw(self.sleeve.back, self.x, self.y, rotation, 1, 1, math.floor(self.face:getWidth()/2), math.floor(self.face:getHeight()/2))
+			love.graphics.setColor(self.sleeve.color.r, self.sleeve.color.g, self.sleeve.color.b, 255)
+		end
 		love.graphics.draw(self.sleeve.border, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.border:getWidth()/2), math.floor(self.sleeve.border:getHeight()/2))
+		love.graphics.setColor(255, 255, 255, 255)
 		love.graphics.draw(self.sleeve.top, self.x, self.y, rotation, 1, 1, math.floor(self.sleeve.top:getWidth()/2), math.floor(self.sleeve.top:getHeight()/2))
 	end
 end
