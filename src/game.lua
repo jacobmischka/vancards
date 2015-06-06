@@ -377,11 +377,14 @@ function shuffle(deck)
 end
 
 function game:mousepressed(x, y, button)
+    if self.card and self.card.dragging.active then
+        return
+    end
 	loveframes.mousepressed(x, y, button)
 	x = (x/love.graphics.getWidth())*CANVAS_WIDTH
 	y = (y/love.graphics.getHeight())*CANVAS_HEIGHT
-	self.card = nil
-	self.card = self:clickedCard(x, y)
+    self.card = nil
+    self.card = self:clickedCard(x, y)
 	if button == "l" then
 		if self.card then
 			if self.card and self.card.orientation == "up" then
@@ -428,11 +431,12 @@ function game:mousereleased(x, y, button)
 		if self.card then
 			self.card:goBack()
 		end
-	elseif button == "r" and self.card then
+        self.card = nil
+    elseif button == "r" and self.card and not self.card.dragging.active then
         local card = self.card
 		card.zone:execute(card)
+        self.card = nil
 	end
-	self.card = nil
 end
 
 function mouseX()
