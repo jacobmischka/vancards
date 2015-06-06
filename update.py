@@ -6,7 +6,7 @@ r = requests.post('http://cf-vanguard.com/en/cardlist/cardsearch', data={'data[C
 r.encoding = 'utf-8'
 soup = BeautifulSoup(r.text)
 trs = soup.find(id="searchResult-table").find_all("tr")
-os.makedirs("cardfaces", exist_ok=True)
+os.makedirs("src/cardfaces", exist_ok=True)
 with open("cards.json", "w") as file:
     cards = []
     for tr in trs:
@@ -58,10 +58,10 @@ with open("cards.json", "w") as file:
             filename = str(card["[Number]"]).replace("/", "-")+".jpg"
             attempts = 3
             card["[Image]"] = filename
-            while not os.path.isfile("cardfaces/"+filename):
+            while not os.path.isfile("src/cardfaces/"+filename):
                 try:
                     data = urllib.request.urlopen("http://cf-vanguard.com/en/cardlist/"+str(src), None, 10).read()
-                    with open("cardfaces/"+filename, "wb") as img:
+                    with open("src/cardfaces/"+filename, "wb") as img:
                         img.write(data)
                 except socket.timeout:
                     attempts -= 1
