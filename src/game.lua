@@ -25,7 +25,7 @@ HAND_OFFSET = 60
 local game = {}
 
 function game:init()
-    math.randomseed(os.time())
+	math.randomseed(os.time())
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	self.guiFont = love.graphics.newFont("res/font.ttf", 12)
@@ -106,7 +106,7 @@ function game:init()
 		card.y = zone.y + (CARD_LENGTH / 2) + (PADDING * 2)
 	end)
 
-    self.zones.p1.hand = zone:new("hand")
+	self.zones.p1.hand = zone:new("hand")
 	self.zones.p1.hand:init(CENTER_X - (CIRCLE_WIDTH / 2) - CIRCLE_WIDTH, CANVAS_HEIGHT - CARD_LENGTH, (CIRCLE_WIDTH * 3) + (PADDING * 2), CARD_LENGTH, "up", "forward", 60, "none", function(i, card, zone)
 		local max = zone.width - CARD_WIDTH
 		local w = #zone.cards * CARD_WIDTH + (PADDING * (#zone.cards - 1))
@@ -129,21 +129,21 @@ function game:init()
 
 	self.frame = loveframes.Create("frame")
 	self.frame:SetPos(canvasX(0), canvasY(0)):ShowCloseButton(false):SetSize(canvasX(FRAME_WIDTH), canvasY(CANVAS_HEIGHT))
-    self.frame:SetDraggable(false)
-    self.frame:SetName("Info")
+	self.frame:SetDraggable(false)
+	self.frame:SetName("Info")
 
-    self.toolbox = loveframes.Create("frame")
-    self.toolbox:SetPos(canvasX(FRAME_WIDTH + MAT_WIDTH), canvasY(0)):ShowCloseButton(false):SetSize(canvasX(FRAME_WIDTH), canvasY(CANVAS_HEIGHT / 2))
-    self.toolbox:SetDraggable(false)
-    self.toolbox:SetName("Toolbox")
-    self.toolList = loveframes.Create("list", self.toolbox)
-    self.shuffle = loveframes.Create("button")
-    self.shuffle:SetText("Shuffle"):SetClickable(true)
-    self.toolList:AddItem(self.shuffle)
-    local deck = self.zones.p1.deck
-    self.shuffle.OnClick = function(object, x, y)
-        shuffle(deck)
-    end
+	self.toolbox = loveframes.Create("frame")
+	self.toolbox:SetPos(canvasX(FRAME_WIDTH + MAT_WIDTH), canvasY(0)):ShowCloseButton(false):SetSize(canvasX(FRAME_WIDTH), canvasY(CANVAS_HEIGHT / 2))
+	self.toolbox:SetDraggable(false)
+	self.toolbox:SetName("Toolbox")
+	self.toolList = loveframes.Create("list", self.toolbox)
+	self.shuffle = loveframes.Create("button")
+	self.shuffle:SetText("Shuffle"):SetClickable(true)
+	self.toolList:AddItem(self.shuffle)
+	local deck = self.zones.p1.deck
+	self.shuffle.OnClick = function(object, x, y)
+		shuffle(deck)
+	end
 
 
 	self.chat = loveframes.Create("frame")
@@ -159,94 +159,94 @@ function game:init()
 
 	local numbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
 
-    self.imageForm = loveframes.Create("form")
-    self.imageForm:SetLayoutType("horizontal"):SetName("")
+	self.imageForm = loveframes.Create("form")
+	self.imageForm:SetLayoutType("horizontal"):SetName("")
 	self.image = loveframes.Create("image")
 	self.image:SetImage("res/sleeve_back.png")
-    self.grade = loveframes.Create("text")
-    self.grade:SetText("0")
-    self.imageForm:AddItem(self.image):AddItem(self.grade)
+	self.grade = loveframes.Create("text")
+	self.grade:SetText("0")
+	self.imageForm:AddItem(self.image):AddItem(self.grade)
 	self.list:AddItem(self.imageForm)
 
 	self.powerForm = loveframes.Create("form")
 	self.powerForm:SetLayoutType("horizontal"):SetName("Power")
 	self.power = loveframes.Create("textinput")
-    self.power:SetEditable(true):SetMultiline(false):SetUsable(numbers)
-    self.power:SetText("0"):SetWidth(canvasX(200))
-    self.power.OnEnter = function(object, text)
-        if self.menucard then
-            self.menucard.power = text
-        end
-    end
-    self.basepower = loveframes.Create("text")
-    self.basepower:SetDefaultColor(100,0,0,255):SetText("0")
+	self.power:SetEditable(true):SetMultiline(false):SetUsable(numbers)
+	self.power:SetText("0"):SetWidth(canvasX(200))
+	self.power.OnEnter = function(object, text)
+		if self.menucard then
+			self.menucard.power = text
+		end
+	end
+	self.basepower = loveframes.Create("text")
+	self.basepower:SetDefaultColor(100,0,0,255):SetText("0")
 	self.powerForm:AddItem(self.power):AddItem(self.basepower)
 	self.list:AddItem(self.powerForm)
 
 	self.shieldForm = loveframes.Create("form")
 	self.shieldForm:SetLayoutType("horizontal"):SetName("Shield")
 	self.shield = loveframes.Create("textinput")
-    self.shield:SetEditable(true):SetMultiline(false):SetUsable(numbers)
-    self.shield:SetText("0"):SetWidth(canvasX(200))
-    self.shield.OnEnter = function(object, text)
-        if self.menucard then
-            self.menucard.shield = text
-        end
-    end
-    self.baseshield = loveframes.Create("text")
-    self.baseshield:SetDefaultColor(100,0,0,255):SetText("0")
-    self.shieldForm:AddItem(self.shield):AddItem(self.baseshield)
+	self.shield:SetEditable(true):SetMultiline(false):SetUsable(numbers)
+	self.shield:SetText("0"):SetWidth(canvasX(200))
+	self.shield.OnEnter = function(object, text)
+		if self.menucard then
+			self.menucard.shield = text
+		end
+	end
+	self.baseshield = loveframes.Create("text")
+	self.baseshield:SetDefaultColor(100,0,0,255):SetText("0")
+	self.shieldForm:AddItem(self.shield):AddItem(self.baseshield)
 	self.list:AddItem(self.shieldForm)
 
-    self.criticalForm = loveframes.Create("form")
-    self.criticalForm:SetLayoutType("horizontal"):SetName("Critical")
-    self.critical = loveframes.Create("textinput")
-    self.critical:SetEditable(true):SetMultiline(false):SetUsable(numbers)
-    self.critical:SetText("0"):SetWidth(canvasX(200))
-    self.critical.OnEnter = function(object, text)
-        if self.menucard then
-            self.menucard.critical = text
-        end
-    end
-    self.basecritical = loveframes.Create("text")
-    self.basecritical:SetDefaultColor(100,0,0,255):SetText("0")
-    self.criticalForm:AddItem(self.critical):AddItem(self.basecritical)
-    self.list:AddItem(self.criticalForm)
+	self.criticalForm = loveframes.Create("form")
+	self.criticalForm:SetLayoutType("horizontal"):SetName("Critical")
+	self.critical = loveframes.Create("textinput")
+	self.critical:SetEditable(true):SetMultiline(false):SetUsable(numbers)
+	self.critical:SetText("0"):SetWidth(canvasX(200))
+	self.critical.OnEnter = function(object, text)
+		if self.menucard then
+			self.menucard.critical = text
+		end
+	end
+	self.basecritical = loveframes.Create("text")
+	self.basecritical:SetDefaultColor(100,0,0,255):SetText("0")
+	self.criticalForm:AddItem(self.critical):AddItem(self.basecritical)
+	self.list:AddItem(self.criticalForm)
 
-    self.skillForm = loveframes.Create("form")
-    self.skillForm:SetLayoutType("horizontal"):SetName("Skill")
-    self.skill = loveframes.Create("text")
-    self.skill:SetText("-")
-    self.skillForm:AddItem(self.skill)
-    self.list:AddItem(self.skillForm)
+	self.skillForm = loveframes.Create("form")
+	self.skillForm:SetLayoutType("horizontal"):SetName("Skill")
+	self.skill = loveframes.Create("text")
+	self.skill:SetText("-")
+	self.skillForm:AddItem(self.skill)
+	self.list:AddItem(self.skillForm)
 
-    self.triggerForm = loveframes.Create("form")
-    self.triggerForm:SetLayoutType("horizontal"):SetName("Trigger")
-    self.trigger = loveframes.Create("text")
-    self.trigger:SetText("-")
-    self.triggerForm:AddItem(self.trigger)
-    self.list:AddItem(self.triggerForm)
+	self.triggerForm = loveframes.Create("form")
+	self.triggerForm:SetLayoutType("horizontal"):SetName("Trigger")
+	self.trigger = loveframes.Create("text")
+	self.trigger:SetText("-")
+	self.triggerForm:AddItem(self.trigger)
+	self.list:AddItem(self.triggerForm)
 
-    self.nationForm = loveframes.Create("form")
-    self.nationForm:SetLayoutType("horizontal"):SetName("Nation")
-    self.nation = loveframes.Create("text")
-    self.nation:SetText("-")
-    self.nationForm:AddItem(self.nation)
-    self.list:AddItem(self.nationForm)
+	self.nationForm = loveframes.Create("form")
+	self.nationForm:SetLayoutType("horizontal"):SetName("Nation")
+	self.nation = loveframes.Create("text")
+	self.nation:SetText("-")
+	self.nationForm:AddItem(self.nation)
+	self.list:AddItem(self.nationForm)
 
-    self.raceForm = loveframes.Create("form")
-    self.raceForm:SetLayoutType("horizontal"):SetName("Race")
-    self.race = loveframes.Create("text")
-    self.race:SetText("-")
-    self.raceForm:AddItem(self.race)
-    self.list:AddItem(self.raceForm)
+	self.raceForm = loveframes.Create("form")
+	self.raceForm:SetLayoutType("horizontal"):SetName("Race")
+	self.race = loveframes.Create("text")
+	self.race:SetText("-")
+	self.raceForm:AddItem(self.race)
+	self.list:AddItem(self.raceForm)
 
-    self.clanForm = loveframes.Create("form")
-    self.clanForm:SetLayoutType("horizontal"):SetName("Clan")
-    self.clan = loveframes.Create("text")
-    self.clan:SetText("-")
-    self.clanForm:AddItem(self.clan)
-    self.list:AddItem(self.clanForm)
+	self.clanForm = loveframes.Create("form")
+	self.clanForm:SetLayoutType("horizontal"):SetName("Clan")
+	self.clan = loveframes.Create("text")
+	self.clan:SetText("-")
+	self.clanForm:AddItem(self.clan)
+	self.list:AddItem(self.clanForm)
 
 	self.text = loveframes.Create("text")
 	self.list:AddItem(self.text)
@@ -315,20 +315,20 @@ function game:draw()
 		zone:draw()
 	end
 	if self.card and self.card.dragging.active and (self.card.x ~= self.card.dragging.x0 or self.card.y ~= self.card.dragging.y0) then
-        self.card:draw()
-    else
-        local hoverCard = self:clickedCard(mouseX(), mouseY())
-        if hoverCard then
-            if hoverCard.zone == self.zones.p1.hand then
-                hoverCard:draw()
-            end
-            if hoverCard.orientation == "up" then
-                if hoverCard.zone ~= self.zones.p1.damage and hoverCard.zone ~= self.zones.p1.gunit then
-                    hoverCard:drawText()
-                end
-            end
-        end
-    end
+		self.card:draw()
+	else
+		local hoverCard = self:clickedCard(mouseX(), mouseY())
+		if hoverCard then
+			if hoverCard.zone == self.zones.p1.hand then
+				hoverCard:draw()
+			end
+			if hoverCard.orientation == "up" then
+				if hoverCard.zone ~= self.zones.p1.damage and hoverCard.zone ~= self.zones.p1.gunit then
+					hoverCard:drawText()
+				end
+			end
+		end
+	end
 
 	-- Scale render target to screen
 	love.graphics.setCanvas()
@@ -350,30 +350,30 @@ function game:clickedCard(x, y)
 end
 
 function game:updateCardmenu(card)
-    self.menucard = card
-    self.frame:SetName(self.card.name)
-    self.image:SetImage(self.card.face)
-    self.grade:SetText(self.card.grade)
+	self.menucard = card
+	self.frame:SetName(self.card.name)
+	self.image:SetImage(self.card.face)
+	self.grade:SetText(self.card.grade)
 	self.power:SetText(self.card.power)
-    self.basepower:SetText(self.card.basepower)
+	self.basepower:SetText(self.card.basepower)
 	self.shield:SetText(self.card.shield)
-    self.baseshield:SetText(self.card.baseshield)
-    self.critical:SetText(self.card.critical)
-    self.basecritical:SetText(self.card.basecritical)
-    self.skill:SetText(self.card.skill)
-    self.trigger:SetText(self.card.trigger)
-    self.nation:SetText(self.card.nation)
-    self.race:SetText(self.card.race)
-    self.clan:SetText(self.card.clan)
-    self.text:SetText(self.card.text)
+	self.baseshield:SetText(self.card.baseshield)
+	self.critical:SetText(self.card.critical)
+	self.basecritical:SetText(self.card.basecritical)
+	self.skill:SetText(self.card.skill)
+	self.trigger:SetText(self.card.trigger)
+	self.nation:SetText(self.card.nation)
+	self.race:SetText(self.card.race)
+	self.clan:SetText(self.card.clan)
+	self.text:SetText(self.card.text)
 end
 
 function shuffle(deck)
-    local cards = deck.cards
-    deck.cards = {}
-    for i=1,#cards do
-        table.insert(deck.cards, table.remove(cards, math.random(1, #cards)))
-    end
+	local cards = deck.cards
+	deck.cards = {}
+	for i=1,#cards do
+		table.insert(deck.cards, table.remove(cards, math.random(1, #cards)))
+	end
 end
 
 function game:mousepressed(x, y, button)
@@ -398,10 +398,10 @@ function game:mousepressed(x, y, button)
 end
 
 function game:swapRearGuard(newZone, card)
-    local oldZone = card.zone
-    self.zones.p1.hand:addCard(newZone.cards[1])
-    newZone:addCard(card)
-    oldZone:addCard(self.zones.p1.hand.cards[#self.zones.p1.hand.cards])
+	local oldZone = card.zone
+	self.zones.p1.hand:addCard(newZone.cards[1])
+	newZone:addCard(card)
+	oldZone:addCard(self.zones.p1.hand.cards[#self.zones.p1.hand.cards])
 end
 
 
@@ -412,15 +412,15 @@ function game:mousereleased(x, y, button)
 	if button == "l" and self.card then
 		for k,zone in pairs(self.zones.p1) do
 			if zone:contains(self.card.x, self.card.y) and zone ~= self.card.zone then
-                if #zone.cards < zone.capacity then
-                    zone:addCard(self.card)
-                else
-                    if self.card.zone.type == "rearguard" and zone.type == "rearguard" then
-                        self:swapRearGuard(zone, self.card)
-                    else
-                        self.card:goBack()
-                    end
-                end
+				if #zone.cards < zone.capacity then
+					zone:addCard(self.card)
+				else
+					if self.card.zone.type == "rearguard" and zone.type == "rearguard" then
+						self:swapRearGuard(zone, self.card)
+					else
+						self.card:goBack()
+					end
+				end
 				self.card = nil
 				break
 			end
@@ -429,7 +429,7 @@ function game:mousereleased(x, y, button)
 			self.card:goBack()
 		end
 	elseif button == "r" and self.card then
-        local card = self.card
+		local card = self.card
 		card.zone:execute(card)
 	end
 	self.card = nil
