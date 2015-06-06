@@ -81,11 +81,15 @@ function card:drawText()
 	if self.rotation == "forward" then
 		love.graphics.print(self.grade, self.x-math.floor(self.face:getWidth()/2) + 6, self.y-math.floor(self.face:getHeight()/2) + 6)
 		love.graphics.print(self.power, self.x-math.floor(self.face:getWidth()/2) + 6, self.y+math.floor(self.face:getWidth()/2) - 6)
-		love.graphics.print(self.shield, self.x-math.floor(self.face:getWidth()/4) + 4, self.y-math.floor(self.face:getHeight()/4), math.pi/2)
+		if self.shield then
+			love.graphics.print(self.shield, self.x-math.floor(self.face:getWidth()/4) + 4, self.y-math.floor(self.face:getHeight()/4), math.pi/2)
+		end
 	else
 		love.graphics.print(self.grade, self.x+math.floor(self.face:getHeight()/2) - 6, self.y-math.floor(self.face:getWidth()/2) + 6, math.pi/2)
 		love.graphics.print(self.power, self.x-math.floor(self.face:getWidth()/2) + 6, self.y-math.floor(self.face:getWidth()/2) + 6, math.pi/2)
-		love.graphics.print(self.shield, self.x+math.floor(self.face:getWidth()/4) + 14, self.y-math.floor(self.face:getWidth()/4) + 4, math.pi)
+		if self.shield then
+			love.graphics.print(self.shield, self.x+math.floor(self.face:getWidth()/4) + 14, self.y-math.floor(self.face:getWidth()/4) + 4, math.pi)
+		end
 	end
 end
 
