@@ -76,4 +76,4 @@ with open("cards.json", "w") as file:
 
         cards.append(card)
         print(str(len(cards))+" / "+str(len(trs)))
-    json.dump(cards, file)
+    json.dump(cards, file, indent=1)
