@@ -34,7 +34,6 @@ with open("cards.json", "w") as file:
                         card["[Trigger]"] = src[src.find("tr_")+3:src.rfind(".")]
 
             elif span.string:
-                print(str(span))
                 if "[Race]" in span.string or "[Clan]" in span.string:
                     words = str(span.string).split(": ")
                     if words[1] != "-":
@@ -50,7 +49,6 @@ with open("cards.json", "w") as file:
                     if text != "-":
                         card["[Flavor Text]"] = text
             else:
-                print(str(span))
                 text = ' '.join(span.stripped_strings)
                 if text != "-":
                     card["[Text]"] = text
@@ -78,5 +76,4 @@ with open("cards.json", "w") as file:
 
         cards.append(card)
         print(str(len(cards))+" / "+str(len(trs)))
-        break
     json.dump(cards, file, indent=1)
