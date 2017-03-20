@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 num_cards = '10000'
 r = requests.post('http://cf-vanguard.com/en/cardlist/cardsearch', data={'data[CardSearch][show_page_count]':num_cards, 'data[CardSearch][keyword]':'', 'cmd':'search'})
 r.encoding = 'utf-8'
-soup = BeautifulSoup(r.text)
+soup = BeautifulSoup(r.text, 'html.parser')
 trs = soup.find(id="searchResult-table").find_all("tr")
 os.makedirs("src/cardfaces", exist_ok=True)
 with open("cards.json", "w") as file:
@@ -33,25 +33,24 @@ with open("cards.json", "w") as file:
                         src = span.find("img")["src"]
                         card["[Trigger]"] = src[src.find("tr_")+3:src.rfind(".")]
 
-            elif span.string:
-                if "[Race]" in span.string or "[Clan]" in span.string:
-                    words = str(span.string).split(": ")
+            else:
+                text = ' '.join(span.stripped_strings)
+                if "[Race]" in text or "[Clan]" in text:
+                    words = str(text).split(": ")
                     if words[1] != "-":
                         card[words[0]] = words[1]
                 elif "[Name]" not in card:
-                    card["[Name]"] = span.string
+                    card["[Name]"] = text
                 elif "[Number]" not in card:
-                    card["[Number]"] = span.string
+                    card["[Number]"] = text
                 elif '[Illustrator]' not in card:
-                    card['[Illustrator]'] = span.string
+                    card['[Illustrator]'] = text
                 elif "[Flavor Text]" not in card:
-                    text = ' '.join(span.stripped_strings)
                     if text != "-":
                         card["[Flavor Text]"] = text
-            else:
-                text = ' '.join(span.stripped_strings)
-                if text != "-":
-                    card["[Text]"] = text
+                else:
+                    if text != "-":
+                        card["[Text]"] = text
 
         src = tr.find("th").find("img")['src']
         if str(src).endswith(".jpg"):
