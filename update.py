@@ -55,26 +55,26 @@ def main():
 					if text != "-":
 						card["[Text]"] = text
 
-		src = tr.find("th").find("img")['src']
+		src = str(tr.find("th").find("img")['src'])
 		ext = os.path.splitext(src)[1]
-		if str(src):
+		if src:
 			filename = str(card["[Number]"]).replace("/", "-") + ext
 			attempts = 3
 			card["[Image]"] = filename
 			while not os.path.isfile("src/cardfaces/" + filename):
 				try:
-					data = urllib.request.urlopen("http://cf-vanguard.com/en/cardlist/"+str(src), None, 10).read()
+					data = urllib.request.urlopen("http://cf-vanguard.com/en/cardlist/" + src, None, 10).read()
 					with open("src/cardfaces/"+filename, "wb") as img:
 						img.write(data)
 				except socket.timeout:
 					attempts -= 1
-					print("timeout (10s): http://cf-vanguard.com/en/cardlist/"+str(src))
+					print("timeout (10s): http://cf-vanguard.com/en/cardlist/" + src)
 					if attempts > 0:
 						print("retrying...")
 					else:
 						break
 				except (urllib.error.HTTPError, urllib.error.URLError):
-					print("error downloading: http://cf-vanguard.com/en/cardlist/"+str(src))
+					print("error downloading: http://cf-vanguard.com/en/cardlist/" + src)
 					break
 
 		cards.append(card)
