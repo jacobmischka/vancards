@@ -56,11 +56,12 @@ def main():
 						card["[Text]"] = text
 
 		src = tr.find("th").find("img")['src']
-		if str(src).endswith(".jpg"):
-			filename = str(card["[Number]"]).replace("/", "-")+".jpg"
+		ext = os.path.splitext(src)[1]
+		if str(src):
+			filename = str(card["[Number]"]).replace("/", "-") + ext
 			attempts = 3
 			card["[Image]"] = filename
-			while not os.path.isfile("src/cardfaces/"+filename):
+			while not os.path.isfile("src/cardfaces/" + filename):
 				try:
 					data = urllib.request.urlopen("http://cf-vanguard.com/en/cardlist/"+str(src), None, 10).read()
 					with open("src/cardfaces/"+filename, "wb") as img:
