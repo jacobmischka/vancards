@@ -9,13 +9,18 @@ from json import dump
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 
+NUM_CARDS = '100000'
+
 cards = []
 
 def main():
 	atexit.register(save_cards)
 
-	num_cards = '10000'
-	r = post('http://cf-vanguard.com/en/cardlist/cardsearch', data={'data[CardSearch][show_page_count]':num_cards, 'data[CardSearch][keyword]':'', 'cmd':'search'})
+	r = post('http://cf-vanguard.com/en/cardlist/cardsearch', data={
+			'data[CardSearch][show_page_count]': NUM_CARDS,
+			'data[CardSearch][keyword]': '',
+			'cmd': 'search'
+		})
 	r.encoding = 'utf-8'
 	soup = BeautifulSoup(r.text, 'html.parser')
 	trs = soup.find(id='searchResult-table').find_all('tr')
