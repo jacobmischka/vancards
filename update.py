@@ -4,6 +4,7 @@ from requests import post
 from bs4 import BeautifulSoup
 
 import os, socket, atexit, re
+from os.path import basename, splitext
 from json import dump
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
@@ -34,29 +35,19 @@ def main():
 				prop = unit[0].strip()
 				try:
 					if prop == '[Nation]':
-						src = span.find('img')['src']
-						card[prop] = src[src.find('co_') + 3 : src.rfind('.')]
+						card[prop] = get_img_value(span, unit).replace('co_', '')
 					elif prop == '[Skill Icon]':
-						try:
-							src = span.find('img')['src']
-							card['[Skill]'] = src[src.find('sk_') + 3 : src.rfind('.')]
-						except:
-							card['[Skill]'] = unit[1].strip()
+						card['[Skill]'] = get_img_value(span, unit).replace('sk_', '')
 					elif prop == '[Trigger]':
-						src = span.find('img')['src']
-						card[prop] = src[src.find('tr_') + 3 : src.rfind('.')]
+						card[prop] = get_img_value(span, unit).replace('tr_', '')
 					else:
 						value = unit[1].strip()
-						if value != '-' and value != '-0':
-							card[prop] = value
+						card[prop] = clean_value(value)
 				except:
 					card[prop] = ''
 		text_span = spans[-1]
 		text = ' '.join(text_span.stripped_strings)
-		if text != '-' and text != '-0':
-			card['[Text]'] = text
-		else:
-			card['[Text]'] = ''
+		card['[Text]'] = clean_value(text)
 
 		src = str(tr.find('th').find('img')['src'])
 		ext = os.path.splitext(src)[1]
@@ -83,6 +74,27 @@ def main():
 		cards.append(card)
 		print(str(len(cards)) + ' / ' + str(len(trs)))
 
+def get_img_value(span, unit):
+	try:
+		src = span.find('img')['src']
+		return splitext(basename(src))[0]
+	except:
+		value = unit[1].strip()
+		if value != '-' and value != '-0':
+			words = value.split(' ')
+			fixed_words = []
+			for word in words:
+				if word[0] == '[' and word[-1] == ']':
+					word = splitext(word[1:-1])[0]
+				fixed_words.append(word)
+			return ' '.join(fixed_words)
+		return ''
+
+def clean_value(value):
+	if value != '-' and value != '-0':
+		return value
+	else:
+		return ''
 
 def save_cards():
 	with open('cards.json', 'w') as file:
