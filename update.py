@@ -33,11 +33,13 @@ def main():
 				attribute = ' '.join(span.stripped_strings)
 				unit = re.split('[：:]', attribute, maxsplit=1)
 				prop = unit[0].strip()
+				if prop == '[Skill Icon]':
+					prop = '[Skill]'
 				try:
 					if prop == '[Nation]':
 						card[prop] = get_img_value(span, unit).replace('co_', '')
-					elif prop == '[Skill Icon]':
-						card['[Skill]'] = get_img_value(span, unit).replace('sk_', '')
+					elif prop == ['[Skill]']:
+						card[prop] = get_img_value(span, unit).replace('sk_', '')
 					elif prop == '[Trigger]':
 						card[prop] = get_img_value(span, unit).replace('tr_', '')
 					else:
@@ -79,8 +81,8 @@ def get_img_value(span, unit):
 		src = span.find('img')['src']
 		return splitext(basename(src))[0]
 	except:
-		value = unit[1].strip()
-		if value != '-' and value != '-0':
+		value = clean_value(unit[1].strip())
+		if value != '':
 			words = value.split(' ')
 			fixed_words = []
 			for word in words:
@@ -88,6 +90,7 @@ def get_img_value(span, unit):
 					word = splitext(word[1:-1])[0]
 				fixed_words.append(word)
 			return ' '.join(fixed_words)
+
 		return ''
 
 def clean_value(value):
