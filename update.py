@@ -1,5 +1,12 @@
-import requests, json, urllib.request, os, socket, atexit
+#!/usr/bin/env python3
+
+from requests import post
 from bs4 import BeautifulSoup
+
+import os, socket, atexit, re
+from json import dump
+from urllib.request import urlopen
+from urllib.error import HTTPError, URLError
 
 cards = []
 
@@ -7,7 +14,7 @@ def main():
 	atexit.register(save_cards)
 
 	num_cards = '10000'
-	r = requests.post('http://cf-vanguard.com/en/cardlist/cardsearch', data={'data[CardSearch][show_page_count]':num_cards, 'data[CardSearch][keyword]':'', 'cmd':'search'})
+	r = post('http://cf-vanguard.com/en/cardlist/cardsearch', data={'data[CardSearch][show_page_count]':num_cards, 'data[CardSearch][keyword]':'', 'cmd':'search'})
 	r.encoding = 'utf-8'
 	soup = BeautifulSoup(r.text, 'html.parser')
 	trs = soup.find(id='searchResult-table').find_all('tr')
@@ -23,7 +30,7 @@ def main():
 		for span in spans:
 			if span.get('class') == ['unit']:
 				attribute = ' '.join(span.stripped_strings)
-				unit = attribute.split('：') if '：' in attribute else attribute.split(':')
+				unit = re.split('[：:]', attribute, maxsplit=1)
 				prop = unit[0].strip()
 				try:
 					if prop == '[Nation]':
@@ -59,7 +66,7 @@ def main():
 			card['[Image]'] = filename
 			while not os.path.isfile('src/cardfaces/' + filename):
 				try:
-					data = urllib.request.urlopen('http://cf-vanguard.com/en/cardlist/' + src, None, 10).read()
+					data = urlopen('http://cf-vanguard.com/en/cardlist/' + src, None, 10).read()
 					with open('src/cardfaces/'+filename, 'wb') as img:
 						img.write(data)
 				except socket.timeout:
@@ -69,7 +76,7 @@ def main():
 						print('retrying...')
 					else:
 						break
-				except (urllib.error.HTTPError, urllib.error.URLError):
+				except (HTTPError, URLError):
 					print('error downloading: http://cf-vanguard.com/en/cardlist/' + src)
 					break
 
@@ -79,7 +86,7 @@ def main():
 
 def save_cards():
 	with open('cards.json', 'w') as file:
-		json.dump(cards, file, indent=1)
+		dump(cards, file, indent=1)
 
 if __name__ == '__main__':
 	main()
